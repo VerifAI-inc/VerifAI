@@ -21,7 +21,7 @@ const Login = () => {
     <div className="login-container">
       {/* Left Side (Branding) */}
       <div className="login-left">
-        <h2>Welcome Back</h2>
+        <h2>Welcome Back!</h2>
         <p>Log in and continue your VerifAI journey.</p>
       </div>
 
