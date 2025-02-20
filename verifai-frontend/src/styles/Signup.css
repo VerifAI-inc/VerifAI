@@ -85,7 +85,7 @@
     font-weight: bold;
 }
 
-.form-group input {
+.signup-container .form-group input {
     width: 120%;
     padding: 14px; 
     border-radius: 6px;
