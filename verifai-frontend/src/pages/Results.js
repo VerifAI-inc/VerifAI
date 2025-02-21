@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Slider from "../components/Slider";
+import "../styles/Global.css";
 
 const Results = () => {
   const [epsilon, setEpsilon] = useState(1.0); // Default ε value

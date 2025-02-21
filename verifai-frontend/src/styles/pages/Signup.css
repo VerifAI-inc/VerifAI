@@ -1,0 +1,171 @@
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap');
+
+* {
+    font-family: 'Vollkorn', serif;
+}
+
+.signup-container {
+    display: flex;
+    height: 100vh;
+}
+
+.signup-left {
+    flex: 0.8;
+    background: linear-gradient(to right, #1e1e2f, #2a2a3e);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.signup-left h2 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.signup-left p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+.signup-right {
+    flex: 1.2; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    background: #f9f9f9;
+}
+
+.signup-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    padding-top: 50px;
+    margin-left: 40px;
+}
+
+.signup-form {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.row {
+    display: flex;
+    gap: 100px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.row .form-group {
+    width: 50%;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.required {
+    color: #ff4b2b;
+    font-weight: bold;
+}
+
+.signup-container .form-group input {
+    width: 120%;
+    padding: 14px; 
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.signup-button {
+    width: 70%;
+    padding: 14px;
+    margin-left: 85px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    border: none;
+    color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    margin-top: 15px;
+    box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2);
+}
+
+.signup-button:hover {
+    background: linear-gradient(to right, #0056b3, #004085);
+    transform: scale(1.03);
+}
+
+.signup-footer p {
+    font-size: 1rem;
+    color: #333;
+    text-align: center;
+}
+
+.login-link {
+    color: #007bff;
+    font-weight: bold;
+    text-decoration: none; /* Removes underline */
+    margin-left: 5px;
+}
+
+.login-link:hover {
+    text-decoration: none; /* Ensures no underline on hover */
+    color: #0056b3; /* Slightly darker blue for hover effect */
+}
+
+
+@media (max-width: 768px) {
+    .signup-container {
+        flex-direction: column;
+    }
+
+    .signup-left {
+        display: none;
+    }
+
+    .signup-right {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .signup-form {
+        max-width: 90%;
+    }
+
+    .row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .row .form-group {
+        width: 100%;
+    }
+}
