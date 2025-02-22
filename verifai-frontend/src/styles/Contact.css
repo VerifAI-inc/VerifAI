@@ -5,6 +5,7 @@
     min-height: calc(100vh - 150px); 
     font-family: 'Vollkorn', serif;
     padding-bottom: -10px;  
+    background: linear-gradient(to right, #1b1e3f, #0a0f1e);
 }
 
 .contact-left {
