@@ -9,6 +9,25 @@
     border-top: 2px solid rgba(255, 255, 255, 0.1);
 }
 
+.page-container {
+    min-height: calc(100vh - 150px);
+}
+
+.contact-page .footer,
+.signup-page .footer,
+.login-page .footer {
+    margin-top: 30px; 
+}
+
+.footer {
+    background: linear-gradient(to right, #1e1e2f, #2a2a3e);
+    color: white;
+    padding: 40px 50px;
+    text-align: center;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+    margin-top: 0; 
+}
+
 .footer-container {
     display: flex;
     justify-content: space-between;
