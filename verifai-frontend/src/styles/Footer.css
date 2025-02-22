@@ -125,6 +125,9 @@
     padding: 10px;
     border-radius: 5px;
     border: none;
+    background-color: white !important;  
+    color: black !important;  
+    border: 1px solid #ccc !important; 
 }
 
 .newsletter-form button {
