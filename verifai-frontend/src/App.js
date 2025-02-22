@@ -10,11 +10,10 @@ const App = () => {
   return (
     <>
       <Navbar />
-      <div style={{ minHeight: "85vh" }}> {/* Ensures Footer stays at bottom */}
+      <div className={`page-container ${location.pathname.substring(1)}-page`}>
         <AppRoutes />
       </div>
-      {/* Hide Footer only on the Signup Page */}
-      {location.pathname !== "/signup" && <Footer />}
+      <Footer />
     </>
   );
 };
