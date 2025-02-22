@@ -2,60 +2,98 @@ import React, { useState } from "react";
 import "../styles/Upload.css";
 
 const Upload = () => {
+  const [modelFile, setModelFile] = useState(null);
+  const [datasetFile, setDatasetFile] = useState(null);
+  const [labelName, setLabelName] = useState("");
+  const [favorableLabel, setFavorableLabel] = useState("");
+  const [protectedAttribute, setProtectedAttribute] = useState("");
+  const [privilegedAttribute, setPrivilegedAttribute] = useState("");
+  const [mitigators, setMitigators] = useState([]);
   const [dpModel, setDpModel] = useState("");
-  const [modelParam, setModelParam] = useState("");
-  const [mitigator, setMitigator] = useState("");
+
+  const handleFileChange = (e, setFile) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleMitigatorChange = (e) => {
+    const value = e.target.value;
+    setMitigators((prev) =>
+      prev.includes(value) ? prev.filter((m) => m !== value) : [...prev, value]
+    );
+  };
 
   const handleSubmit = () => {
+    console.log("Model File:", modelFile?.name);
+    console.log("Dataset File:", datasetFile?.name);
+    console.log("Label Name:", labelName);
+    console.log("Favorable Label:", favorableLabel);
+    console.log("Protected Attribute:", protectedAttribute);
+    console.log("Privileged Attribute:", privilegedAttribute);
+    console.log("Selected Mitigators:", mitigators);
     console.log("DP Model:", dpModel);
-    console.log("Model Parameter:", modelParam);
-    console.log("Mitigator:", mitigator);
   };
 
   return (
     <div className="upload-container">
+      <h1 className="upload-title">Upload Data</h1>
       <div className="upload-card">
-        <h1 className="upload-title">Upload</h1>
+        <div className="form-section">
+          {/* Left Column */}
+          <div className="form-column">
+            <div className="form-group">
+              <label>Upload Model (.pkl file)</label>
+              <input type="file" accept=".pkl" onChange={(e) => handleFileChange(e, setModelFile)} />
+            </div>
 
-        <div className="form-group">
-          <label>Choose DP Model Type</label>
-          <select
-            value={dpModel}
-            onChange={(e) => setDpModel(e.target.value)}
-          >
-            <option value="">Select DP Model</option>
-            <option value="dp1">DP Model 1</option>
-            <option value="dp2">DP Model 2</option>
-            <option value="dp3">DP Model 3</option>
-          </select>
+            <div className="form-group">
+              <label>Label Name</label>
+              <input type="text" placeholder="Enter label name" value={labelName} onChange={(e) => setLabelName(e.target.value)} />
+            </div>
+
+            <div className="form-group">
+              <label>Protected Attribute Name</label>
+              <input type="text" placeholder="Enter protected attribute" value={protectedAttribute} onChange={(e) => setProtectedAttribute(e.target.value)} />
+            </div>
+
+            {/* Mitigators Section Moved to Right */}
+            <div className="form-group mitigators-group">
+              <label>Choose Mitigators (Multiple Select)</label>
+              <div className="mitigators-container">
+                {["Synthetic Oversampling", "Rew", "Dir", "Eg"].map((mitigator) => (
+                  <label key={mitigator} className="mitigator-option">
+                    <input
+                      type="checkbox"
+                      value={mitigator}
+                      checked={mitigators.includes(mitigator)}
+                      onChange={handleMitigatorChange}
+                    />
+                    {mitigator}
+                  </label>
+                ))}
+            </div>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Choose Model Parameters</label>
-          <select
-            value={modelParam}
-            onChange={(e) => setModelParam(e.target.value)}
-          >
-            <option value="">Select Model Parameter</option>
-            <option value="param1">Parameter 1</option>
-            <option value="param2">Parameter 2</option>
-            <option value="param3">Parameter 3</option>
-          </select>
+          {/* Right Column */}
+          <div className="form-column">
+            <div className="form-group">
+              <label>Upload Clean Dataset (.csv file)</label>
+              <input type="file" accept=".csv" onChange={(e) => handleFileChange(e, setDatasetFile)} />
+            </div>
+
+            <div className="form-group">
+              <label>Privileged Attribute</label>
+              <input type="text" placeholder="Enter privileged attribute" value={privilegedAttribute} onChange={(e) => setPrivilegedAttribute(e.target.value)} />
+            </div>
+
+            <div className="form-group">
+              <label>Favorable Label Name</label>
+              <input type="text" placeholder="Enter favorable label name" value={favorableLabel} onChange={(e) => setFavorableLabel(e.target.value)} />
+            </div>
+          </div>
         </div>
 
-        <div className="form-group">
-          <label>Choose Mitigator</label>
-          <select
-            value={mitigator}
-            onChange={(e) => setMitigator(e.target.value)}
-          >
-            <option value="">Select Mitigator</option>
-            <option value="mitigator1">Mitigator 1</option>
-            <option value="mitigator2">Mitigator 2</option>
-            <option value="mitigator3">Mitigator 3</option>
-          </select>
-        </div>
-
+        {/* Submit Button */}
         <button className="upload-button" onClick={handleSubmit}>
           GET RESULTS
         </button>
