@@ -2,12 +2,11 @@
 
 .contact-container {
     display: flex;
-    height: auto;
+    min-height: calc(100vh - 150px); 
     font-family: 'Vollkorn', serif;
-    padding-bottom: 50px; /* Adds space between the footer and map */
+    padding-bottom: -10px;  
 }
 
-/* Left Section */
 .contact-left {
     flex: 0.8;
     background: linear-gradient(to right, #1e1e2f, #2a2a3e);
@@ -30,7 +29,6 @@
     margin: 10px 0;
 }
 
-/* Right Section */
 .contact-right {
     flex: 1.2;
     display: flex;
@@ -41,7 +39,6 @@
     background: #f9f9f9;
 }
 
-/* Form */
 .contact-title {
     font-size: 2rem;
     font-weight: bold;
@@ -89,7 +86,6 @@
     resize: none;
 }
 
-/* Send Message Button */
 .contact-button {
     width: 100%;
     padding: 12px;
@@ -110,28 +106,29 @@
     transform: scale(1.03);
 }
 
-/* Map Below the Form */
+.contact-page .footer {
+    margin-top: 50px; 
+}
+
+.contact-page .footer-container {
+    padding-top: 10px; 
+}
+
 .contact-map {
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 25px; /* Space above map */
+    margin-top: 25px;
 }
 
 .contact-map iframe {
-    width: 110vw; /* Expands beyond the container */
-    max-width: 600px; /* Prevents it from getting too large */
+    width: 110vw;
+    max-width: 600px; 
     height: 250px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-
-.footer {
-    margin-top: -51px;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
     .contact-container {
         flex-direction: column;
