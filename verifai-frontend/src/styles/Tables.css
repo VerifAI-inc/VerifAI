@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
+
+.tables-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    font-family: 'Vollkorn', serif;
+    background: #f4f4f4;
+    padding: 50px 0;
+}
+
+.tables-container {
+    width: 75%;
+    background: white;
+    padding: 50px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    position: relative;
+}
+
+.tables-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ddd;
+}
+
+.tables-header h1 {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.download-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: black;
+    font-size: 1.5rem;
+    transition: color 0.3s ease-in-out;
+}
+
+.download-btn:hover {
+    color: #0056b3;
+}
+
+.tables-section {
+    margin: 30px 0;
+}
+
+.tables-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.generate-btn {
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.generate-btn:hover {
+    background: linear-gradient(to right, #0056b3, #004085);
+    transform: scale(1.05);
+}
+
+.tables-content {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table-header h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.table-wrapper {
+    margin-bottom: 30px;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-wrapper h2 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+}
+
+/* Styling for the table itself */
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    color: #333;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table header */
+.data-table thead {
+    background: linear-gradient(to right, #3a3a4d, #28283d);
+    color: white;
+    font-size: 1.1rem;
+}
+
+/* Table cells */
+.data-table th, .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+    font-size: 1rem;
+}
+
+/* Add hover effect */
+.data-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transition: background 0.3s ease-in-out;
+}
+
+/* Add alternating row colors */
+.data-table tbody tr:nth-child(even) {
+    background: #f2f2f2;
+}
+
+.no-tables-message {
+    font-size: 1.2rem;
+    color: #777;
+    font-style: italic;
+    background: #fafafa;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+    .tables-container {
+        width: 95%;
+        padding: 20px;
+    }
+
+    .generate-btn {
+        font-size: 1rem;
+    }
+
+    .data-table th, .data-table td {
+        font-size: 0.9rem;
+    }
+}
