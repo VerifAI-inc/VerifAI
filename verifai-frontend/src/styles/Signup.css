@@ -129,16 +129,25 @@
     text-align: center;
 }
 
+.signup-page .footer {
+    margin-top: 40px; 
+    margin-left: 45px;
+}
+
+.signup-page .footer-container {
+    padding-top: 10px;
+}
+
 .login-link {
     color: #007bff;
     font-weight: bold;
-    text-decoration: none; /* Removes underline */
+    text-decoration: none; 
     margin-left: 5px;
 }
 
 .login-link:hover {
-    text-decoration: none; /* Ensures no underline on hover */
-    color: #0056b3; /* Slightly darker blue for hover effect */
+    text-decoration: none; 
+    color: #0056b3;
 }
 
 
