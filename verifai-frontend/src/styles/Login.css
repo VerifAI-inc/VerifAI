@@ -120,6 +120,14 @@
     text-decoration: underline;
 }
 
+.login-page .footer {
+    margin-top: 50px; 
+}
+
+.login-page .footer-container {
+    padding-top: 15px; 
+}
+
 @media (max-width: 768px) {
     .login-container {
         flex-direction: column;
