@@ -1,9 +1,95 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
-class Customer(models.Model):
-    name = models.CharField("Name", max_length=240)
-    email = models.EmailField()
-    created = models.DateField(auto_now_add=True)
+# Custom User Model
+class User(AbstractUser):
+    job_role = models.CharField(max_length=255, blank=True, null=True)
+    job_field = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    groups = models.ManyToManyField(Group, related_name="custom_user_groups")
+    user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions")
 
-    def __str__(self):
-        return self.name
+# Uploaded Model (ML Model)
+class UploadedModel(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    file = models.FileField(upload_to="models/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+# Uploaded Dataset
+class UploadedDataset(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    label_name = models.CharField(max_length=255)
+    pa_name = models.CharField(max_length=255)
+    fav_label = models.FloatField()
+    priv_attb = models.FloatField()
+    file = models.FileField(upload_to="datasets/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+# Session Table
+class Session(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    dp_model_type = models.CharField(max_length=255)
+    dp_model_parameters = models.JSONField()
+    mitigators = models.CharField(max_length=255)
+    epsilon = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+# Graphs
+class Graph(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    with_dp = models.BooleanField()
+    category = models.CharField(max_length=255)
+
+# Tables
+class Table(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    category = models.CharField(max_length=255)
+
+# Fairness Evaluation Result (One-to-One with Session)
+class FairnessEvaluationResult(models.Model):
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    epsilon = models.FloatField()
+    with_dp = models.BooleanField()
+    mitigator = models.CharField(max_length=255)
+    bal_acc = models.FloatField(null=True, blank=True)
+    avg_odds_diff = models.FloatField(null=True, blank=True)
+    disp_imp = models.FloatField(null=True, blank=True)
+    stat_par_diff = models.FloatField(null=True, blank=True)
+    eq_opp_diff = models.FloatField(null=True, blank=True)
+    theil_ind = models.FloatField(null=True, blank=True)
+
+# Privacy Evaluation Result (One-to-One with Session)
+class PrivacyEvaluationResult(models.Model):
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    epsilon = models.FloatField()
+    with_dp = models.BooleanField()
+    privacy_risk_g0_minus = models.FloatField(null=True, blank=True)
+    privacy_risk_g0_plus = models.FloatField(null=True, blank=True)
+    privacy_risk_g1_minus = models.FloatField(null=True, blank=True)
+    privacy_risk_g1_plus = models.FloatField(null=True, blank=True)
+
+# Accuracy Results (One-to-One with Session)
+class AccuracyResult(models.Model):
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    epsilon = models.FloatField()
+    mitigator = models.CharField(max_length=255)
+    total_train_acc = models.FloatField(null=True, blank=True)
+    total_test_acc = models.FloatField(null=True, blank=True)
+    train_acc_g0_minus = models.FloatField(null=True, blank=True)
+    train_acc_g0_plus = models.FloatField(null=True, blank=True)
+    train_acc_g1_minus = models.FloatField(null=True, blank=True)
+    train_acc_g1_plus = models.FloatField(null=True, blank=True)
+    test_acc_g0_minus = models.FloatField(null=True, blank=True)
+    test_acc_g0_plus = models.FloatField(null=True, blank=True)
+    test_acc_g1_minus = models.FloatField(null=True, blank=True)
+    test_acc_g1_plus = models.FloatField(null=True, blank=True)
+
+# Report History
+class ReportHistory(models.Model):
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255)
+    content = models.TextField()
