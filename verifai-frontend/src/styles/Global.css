@@ -1,8 +1,23 @@
 /* General Background for All Pages */
 body {
-    background: url('../assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center fixed;
+    background: url('../assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center top;
     background-size: cover;
     position: relative;
+    background-attachment: fixed; 
+    margin: 0;
+    padding: 0;
+}
+
+.home, .other-pages {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+}
+
+.main-content {
+    flex: 1; 
+    padding-top: 80px; 
+    padding-bottom: 80px;
 }
   
 /* Home Page - More Visible Background */
@@ -41,17 +56,20 @@ a:hover {
     color: #00d9ff;
 }
 
-/* Buttons */
-button {
-    background: #4a90e2;
+/* General Button Styles */
+button, .btn, .download-btn {
+    background: rgba(79, 172, 254, 0.8); /* Initial vibrant blue */
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 12px 20px;
     cursor: pointer;
     border-radius: 5px;
-    transition: 0.3s;
+    transition: background 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    font-size: 1rem;
 }
 
-button:hover {
-    background: #0056b3;
+/* Button Hover: Less Opaque */
+button:hover, .btn:hover, .download-btn:hover {
+    background: rgba(79, 172, 254, 0.5); /* Reduced opacity */
+    opacity: 0.8; /* Less solid on hover */
 }

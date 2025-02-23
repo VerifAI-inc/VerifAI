@@ -1,6 +1,6 @@
 .footer {
     background: rgba(10, 25, 47, 0.1);
-    color: white; 
+    color: #0088ff; 
     padding: 40px 50px;
     display: flex;
     justify-content: center;
@@ -30,7 +30,7 @@
 }
 
 .footer-left p {
-    color: #a59bcd; 
+    color: white; 
 }
 
 .footer-left .icon {
@@ -82,7 +82,7 @@
 }
 
 .quick-links ul li a {
-    color: #a59bcd; 
+    color: white; 
     text-decoration: none;
     transition: color 0.3s ease-in-out;
 }
@@ -114,21 +114,13 @@
     color: white;
 }
 
-.newsletter-form button {
-    background: rgba(79, 172, 254, 0.8); /* Transparent neon blue */
-    transition: 0.3s ease-in-out;
-}
-
-.newsletter-form button:hover {
-    background: rgba(0, 136, 255, 0.9);
-}
-
 .footer-left a {
     font-weight: bold;
 }
 
 .footer-left a:hover {
     text-decoration: underline;
+    color: #00d9ff;
 }
 
 @media (max-width: 768px) {

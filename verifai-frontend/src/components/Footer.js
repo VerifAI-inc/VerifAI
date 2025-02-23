@@ -13,7 +13,7 @@ const Footer = () => {
           <p className="footer-tagline">Ensure fairness, protect privacy, build trust.</p>
           <p>© {new Date().getFullYear()} VerifAI. All rights reserved.</p>
           <p>
-            <FaEnvelope className="icon" />
+            <FaEnvelope className="icon"/>
             <a href="mailto:support@verifai.com"> support@verifai.com</a>
           </p>
         </div>

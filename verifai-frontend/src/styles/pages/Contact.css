@@ -96,18 +96,12 @@
     font-size: 1.1rem;
     font-weight: bold;
     text-transform: uppercase;
-    background: linear-gradient(to right, #4a90e2, #0056b3);
     border: none;
     color: white;
     border-radius: 25px;
     cursor: pointer;
     transition: 0.3s ease-in-out;
     margin-top: 10px;
-}
-
-.contact-button:hover {
-    background: linear-gradient(to right, #0056b3, #004085);
-    transform: scale(1.03);
 }
 
 /* Map Below the Form */

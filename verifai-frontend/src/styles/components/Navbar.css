@@ -1,8 +1,8 @@
 .navbar {
     position: fixed;
     top: 0;
-    width: 100%;
-    background: rgba(20, 20, 40, 0.9); 
+    width: calc(100% - 17px);
+    background: rgba(10, 25, 47, 0.1);
     backdrop-filter: blur(10px);
     display: flex;
     justify-content: space-between;
@@ -10,12 +10,13 @@
     padding: 15px 40px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    box-sizing: border-box;
 }
 
 .navbar-logo {
     display: flex;
     align-items: center;
-    color: white;
+    color: #0088ff;
     font-size: 1.5rem;
     font-weight: bold;
 }
