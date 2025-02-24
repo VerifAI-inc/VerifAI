@@ -1,0 +1,57 @@
+.slider-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    color: white;
+}
+
+/* Label Styling */
+.slider-label {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+/* Slider Track */
+.slider-input {
+    width: 80%;
+    appearance: none;
+    height: 8px;
+    background: linear-gradient(90deg, #4facfe 0%, #8f44fd 0%); /* Fills dynamically */
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Dynamic Fill Effect */
+.slider-input::-webkit-slider-runnable-track {
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #4facfe 0%, #8f44fd 0%);
+}
+
+/* Center the Thumb Properly */
+.slider-input::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -5px; /* Adjusts the thumb position to align with the track */
+    transition: 0.2s;
+}
+
+.slider-input::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+/* Fill dynamically as user slides */
+.slider-input:focus::-webkit-slider-runnable-track {
+    background: linear-gradient(90deg, #4facfe 0%, #8f44fd 100%);
+}
