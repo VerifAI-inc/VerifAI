@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/Navbar.css";
+import "../styles/components/Navbar.css";
 // import logo from "../assets/logo.png"; 
 
 const Navbar = () => {
@@ -19,7 +19,6 @@ const Navbar = () => {
         <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
         <li><Link to="/upload" onClick={() => setMenuOpen(false)}>Upload</Link></li>
         <li><Link to="/results" onClick={() => setMenuOpen(false)}>Results</Link></li>
-        <li><Link to="/tables" onClick={() => setMenuOpen(false)}>Tables</Link></li>
         <li><Link to="/reports" onClick={() => setMenuOpen(false)}>Reports</Link></li>
         <li><Link to="/profile" onClick={() => setMenuOpen(false)}>Profile</Link></li>
         <li><Link to="/contact" onClick={() => setMenuOpen(false)}>Contact</Link></li>

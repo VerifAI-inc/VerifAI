@@ -7,14 +7,17 @@ import Footer from "./components/Footer";
 const App = () => {
   const location = useLocation(); 
 
+  const pageClass = location.pathname === "/" ? "home" : "other-pages";
+
   return (
-    <>
+    <div className={pageClass}>
       <Navbar />
-      <div className={`page-container ${location.pathname.substring(1)}-page`}>
+      <div className="main-content">
         <AppRoutes />
       </div>
-      <Footer />
-    </>
+      {/* Hide Footer only on the Signup Page */}
+      {location.pathname !== "/signup" && <Footer />}
+    </div>
   );
 };
 

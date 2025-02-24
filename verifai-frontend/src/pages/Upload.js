@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/Upload.css";
+import "../styles/pages/Upload.css";
 
 const Upload = () => {
   const [modelFile, setModelFile] = useState(null);

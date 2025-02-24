@@ -1,0 +1,105 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: calc(100% - 17px);
+    background: rgba(10, 25, 47, 0.1);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+.navbar-logo {
+    display: flex;
+    align-items: center;
+    color: #0088ff;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navbar-logo img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+}
+
+.navbar-links {
+    display: flex;
+    list-style: none;
+    gap: 30px; 
+    padding-right: 75px;
+}
+
+.navbar-links li {
+    font-size: 1rem;
+    font-weight: 500;
+    position: relative;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: white;
+    transition: color 0.3s ease-in-out;
+}
+
+.navbar-links a:hover {
+    color: #4facfe;
+}
+
+.profile-dropdown {
+    position: relative;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+}
+
+.profile-text {
+    display: inline-block;
+    padding: 10px;
+    transition: color 0.3s ease-in-out;
+}
+
+.profile-text:hover {
+    color: #4facfe;
+}
+
+.menu-icon {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.bar {
+    width: 28px;
+    height: 4px;
+    background: white;
+    margin: 4px 0;
+    transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        right: 0;
+        background: rgba(20, 20, 40, 0.95);
+        width: 200px;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .navbar-links.open {
+        display: flex;
+    }
+    
+    .menu-icon {
+        display: flex;
+    }
+}

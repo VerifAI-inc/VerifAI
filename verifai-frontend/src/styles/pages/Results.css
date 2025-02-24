@@ -1,0 +1,84 @@
+/* Results Page Layout */
+.results-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 50px 80px;
+    color: white;
+}
+
+/* Header */
+.results-header {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.results-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #4facfe;
+}
+
+.results-description {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+/* Download Button */
+.download-section {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+/* Slider */
+.slider-container {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Graphs Section */
+.graphs-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.graph-card {
+    width: 48%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Buttons for Tables & Reports */
+.results-buttons {
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .graphs-container {
+        flex-direction: column;
+    }
+
+    .graph-card {
+        width: 100%;
+    }
+
+    .results-buttons {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .download-section {
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+}
