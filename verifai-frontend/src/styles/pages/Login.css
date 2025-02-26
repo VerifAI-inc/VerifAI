@@ -89,6 +89,7 @@
     font-size: 1.1rem;
     font-weight: bold;
     text-transform: uppercase;
+    background: linear-gradient(to right, #4a90e2, #0056b3);
     border: none;
     color: white;
     border-radius: 25px;
@@ -96,6 +97,11 @@
     transition: 0.3s ease-in-out;
     margin-top: 10px;
     box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2);
+}
+
+.login-button:hover {
+    background: linear-gradient(to right, #0056b3, #004085);
+    transform: scale(1.03);
 }
 
 .login-footer p {
@@ -112,6 +118,14 @@
 
 .signup-link:hover {
     text-decoration: underline;
+}
+
+.login-page .footer {
+    margin-top: 50px; 
+}
+
+.login-page .footer-container {
+    padding-top: 15px; 
 }
 
 @media (max-width: 768px) {
