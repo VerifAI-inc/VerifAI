@@ -2,8 +2,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 50px;
     color: white;
+    position: relative;
 }
 
 /* Label Styling */
@@ -12,46 +13,89 @@
     margin-bottom: 8px;
 }
 
+/* Centered Slider Container */
+.slider-container {
+    position: relative;
+    width: 50%;  /* Ensures slider is only 50% of parent */
+    margin: auto; /* Centers it */
+}
+
 /* Slider Track */
 .slider-input {
-    width: 80%;
+    width: 100%;  /* Now it will take full width of its container (50%) */
     appearance: none;
     height: 8px;
-    background: linear-gradient(90deg, #4facfe 0%, #8f44fd 0%); /* Fills dynamically */
+    background: linear-gradient(90deg, #4facfe 0%, #8f44fd 0%);
     border-radius: 5px;
     outline: none;
     transition: background 0.3s ease-in-out;
 }
 
-/* Dynamic Fill Effect */
+/* Smooth Sliding Effect */
 .slider-input::-webkit-slider-runnable-track {
     height: 8px;
     border-radius: 5px;
-    background: linear-gradient(90deg, #4facfe 0%, #8f44fd 0%);
+    background: linear-gradient(90deg, #4facfe, #8f44fd);
+    transition: background 0.2s ease-in-out;
 }
 
 /* Center the Thumb Properly */
 .slider-input::-webkit-slider-thumb {
     appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     background: white;
     border-radius: 50%;
     cursor: pointer;
-    margin-top: -5px; /* Adjusts the thumb position to align with the track */
-    transition: 0.2s;
+    margin-top: -6px;
+    transition: transform 0.2s ease-in-out, left 0.2s ease-in-out;
 }
 
+/* Thumb Animation on Release */
+.slider-input:active::-webkit-slider-thumb {
+    transform: scale(1.2);
+}
+
+/* Adjust for Mozilla Firefox */
 .slider-input::-moz-range-thumb {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     background: white;
     border-radius: 50%;
     cursor: pointer;
-    transition: 0.2s;
+    transition: transform 0.2s ease-in-out;
 }
 
-/* Fill dynamically as user slides */
+/* Smooth Fill Effect */
 .slider-input:focus::-webkit-slider-runnable-track {
     background: linear-gradient(90deg, #4facfe 0%, #8f44fd 100%);
+}
+
+/* Legends (Clickable Values Below Slider) */
+.slider-legends {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin-top: 10px;
+    padding: 0 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Positioning the Legend Text Below the Slider */
+.slider-legend {
+    position: absolute;
+    bottom: -25px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transform: translateX(-50%);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Legend Hover Effect */
+.slider-legend:hover {
+    transform: translateX(-50%) scale(1.2);
+    color: #00d9ff;
 }

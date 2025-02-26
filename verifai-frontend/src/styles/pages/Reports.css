@@ -33,7 +33,7 @@
     color: #333;
 }
 
-.download-btn {
+/* .download-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -44,7 +44,7 @@
 
 .download-btn:hover {
     color: #0056b3;
-}
+} */
 
 .report-section {
     margin: 30px 0;

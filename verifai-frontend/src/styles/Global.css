@@ -1,6 +1,6 @@
 /* General Background for All Pages */
 body {
-    background: url('../assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center top;
+    background: url('../assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat 50% 50%;
     background-size: cover;
     position: relative;
     background-attachment: fixed; 

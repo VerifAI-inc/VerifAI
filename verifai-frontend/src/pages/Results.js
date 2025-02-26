@@ -3,6 +3,8 @@ import Slider from "../components/Slider";
 import { FaDownload } from "react-icons/fa";
 import "../styles/Global.css";
 import "../styles/pages/Results.css";
+import example1 from "../assets/graphs/example1.png"; 
+import example2 from "../assets/graphs/example2.png";
 
 const Results = () => {
   const [epsilon, setEpsilon] = useState(1.0);
@@ -38,6 +40,8 @@ const Results = () => {
         <div className="graph-card">
           <h2>Without DP</h2>
           {/* Graphs will be placed here */}
+          <img src={example1} alt="" />
+          <img src={example2} alt="" />
         </div>
 
         <div className="graph-card">
