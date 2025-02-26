@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/Tables.css";
+import "../styles/pages/Tables.css";
 import { FaDownload } from "react-icons/fa";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";

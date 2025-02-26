@@ -108,6 +108,7 @@
     font-size: 1.1rem;
     font-weight: bold;
     text-transform: uppercase;
+    background: linear-gradient(to right, #4a90e2, #0056b3);
     border: none;
     color: white;
     border-radius: 25px;
@@ -117,22 +118,36 @@
     box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2);
 }
 
+.signup-button:hover {
+    background: linear-gradient(to right, #0056b3, #004085);
+    transform: scale(1.03);
+}
+
 .signup-footer p {
     font-size: 1rem;
     color: #333;
     text-align: center;
 }
 
+.signup-page .footer {
+    margin-top: 40px; 
+    margin-left: 45px;
+}
+
+.signup-page .footer-container {
+    padding-top: 10px;
+}
+
 .login-link {
     color: #007bff;
     font-weight: bold;
-    text-decoration: none; /* Removes underline */
+    text-decoration: none; 
     margin-left: 5px;
 }
 
 .login-link:hover {
-    text-decoration: none; /* Ensures no underline on hover */
-    color: #00d9ff;
+    text-decoration: none; 
+    color: #0056b3;
 }
 
 

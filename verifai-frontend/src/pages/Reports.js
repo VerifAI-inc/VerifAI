@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/Reports.css";
+import "../styles/pages/Reports.css";
 import { FaDownload } from "react-icons/fa";
 
 const Reports = () => {
