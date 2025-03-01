@@ -17,8 +17,8 @@ from aif360.metrics import utils, BinaryLabelDatasetMetric
 ###############################################################################
 # Training function for Original Data (Before DP transformation)
 ###############################################################################
-def train_orig(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, num_shadows=5,
-               shadow_model_builder, target_model_builder):
+def train_orig(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
+                shadow_model_builder, target_model_builder, num_shadows=5):
 
     if target_model_builder is None:
         raise ValueError("You must provide a target_model_builder function for the DP model.")
@@ -134,8 +134,8 @@ def train_orig(X, y, dataset_binary, protected_attribute_index, privileged_attri
 ###############################################################################
 # Training function for DIR (Before DP transformation)
 ###############################################################################
-def train_dir(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, num_shadows=5,
-               shadow_model_builder, target_model_builder):
+def train_dir(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
+                shadow_model_builder, target_model_builder, num_shadows=5):
 
     if target_model_builder is None:
         raise ValueError("You must provide a target_model_builder function for the DP model.")
@@ -256,7 +256,7 @@ def train_dir(X, y, dataset_binary, protected_attribute_index, privileged_attrib
 # Training function with Synthetic Oversampling (After DP transformation)
 ###############################################################################
 def train_syn(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
-            num_shadows=5, shadow_model_builder, target_model_builder):
+                shadow_model_builder, target_model_builder, num_shadows=5):
     """
     Train models using a synthetic oversampling transformation on the training data.
     This function requires additional parameters for the synthetic transformation.
@@ -396,7 +396,7 @@ def train_syn(X, y, dataset_binary, protected_attribute_index, privileged_attrib
 # (Shadow models are trained with the original builder)
 ###############################################################################
 def train_syn_target(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
-            num_shadows=5, shadow_model_builder, target_model_builder):
+                shadow_model_builder, target_model_builder, num_shadows=5):
     """
     Train models using a synthetic oversampling transformation on the training data.
     This function requires additional parameters for the synthetic transformation.
@@ -532,7 +532,7 @@ def train_syn_target(X, y, dataset_binary, protected_attribute_index, privileged
 # Training function using Reweighing (a fairness pre-processing method)
 ###############################################################################
 def train_rew(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
-            num_shadows=5, shadow_model_builder, target_model_builder):
+                shadow_model_builder, target_model_builder, num_shadows=5):
 
     n_samples = X.shape[0]
     overall_results = []
@@ -650,9 +650,8 @@ def train_rew(X, y, dataset_binary, protected_attribute_index, privileged_attrib
 ###############################################################################
 # Training function using Inprocessing (Exponentiated Gradient Reduction)
 ###############################################################################
-def train_eg(dataframe, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
-            num_shadows=5, shadow_model_builder, target_model_builder):
-
+def train_eg(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
+                shadow_model_builder, target_model_builder, num_shadows=5):
     label_name = dataset_binary.label_names[0]
     X = dataframe.drop(columns=[label_name])
     y = np.array(dataframe[label_name]).astype(int)

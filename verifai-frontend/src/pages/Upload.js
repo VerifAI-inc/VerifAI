@@ -22,16 +22,39 @@ const Upload = () => {
     );
   };
 
-  const handleSubmit = () => {
-    console.log("Model File:", modelFile?.name);
-    console.log("Dataset File:", datasetFile?.name);
-    console.log("Label Name:", labelName);
-    console.log("Favorable Label:", favorableLabel);
-    console.log("Protected Attribute:", protectedAttribute);
-    console.log("Privileged Attribute:", privilegedAttribute);
-    console.log("Selected Mitigators:", mitigators);
-    console.log("DP Model:", dpModel);
+  const handleSubmit = async () => {
+    // Create a FormData instance and append all the fields
+    const formData = new FormData();
+    formData.append("modelFile", modelFile);
+    formData.append("datasetFile", datasetFile);
+    formData.append("labelName", labelName);
+    formData.append("favorableLabel", favorableLabel);
+    formData.append("protectedAttribute", protectedAttribute);
+    formData.append("privilegedAttribute", privilegedAttribute);
+    formData.append("dpModel", dpModel);
+    formData.append("epsilon", "1.0"); // Ensure epsilon is sent as a string
+  
+    // Append each mitigator. If the backend expects multiple entries with the same key:
+    mitigators.forEach((mitigator) => formData.append("mitigators", mitigator));
+  
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/upload/", {
+        method: "POST",
+        headers: {
+          // Include the token obtained from your Django backend.
+          "Authorization": "Token 89409bb7487029afdef8f93282c15a1d3b4aacdb",
+          // Do NOT set "Content-Type"; the browser will set it automatically for FormData.
+        },
+        body: formData,
+      });
+      
+      const data = await response.json();
+      console.log("Response from server:", data);
+    } catch (error) {
+      console.error("Error during file upload:", error);
+    }
   };
+  
 
   return (
     <div className="upload-container">

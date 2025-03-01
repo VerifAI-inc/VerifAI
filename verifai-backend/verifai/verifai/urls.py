@@ -17,7 +17,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
+from webapp.views import UploadAPIView
+from rest_framework.authtoken.views import obtain_auth_token
+
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path('api/upload/', UploadAPIView.as_view(), name='upload-api'),
+    path('api-token-auth/', obtain_auth_token), 
 ]
