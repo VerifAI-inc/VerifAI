@@ -12,6 +12,9 @@ const Signup = () => {
     confirmPassword: "",
   });
 
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
   // Mouse Light Effect
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -27,13 +30,43 @@ const Signup = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
+
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      setError("Passwords do not match!");
       return;
     }
-    console.log("Sign Up Data:", formData);
+
+    // Prepare request payload
+    const requestData = {
+      username: formData.username,
+      password: formData.password,
+    };
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/auth/signup/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setSuccess("Signup successful! Redirecting...");
+        setTimeout(() => {
+          window.location.href = "/login"; // Redirect to login page
+        }, 2000);
+      } else {
+        setError(data.error || "Signup failed. Try again.");
+      }
+    } catch (err) {
+      setError("Server error. Please try again later.");
+    }
   };
 
   return (
@@ -48,6 +81,8 @@ const Signup = () => {
         {/* Right Side: Signup Form */}
         <div className="signup-right">
           <h1 className="signup-title">Create an Account</h1>
+          {error && <p className="error-message">{error}</p>}
+          {success && <p className="success-message">{success}</p>}
           <form className="signup-form" onSubmit={handleSubmit}>
             <div className="row">
               <div className="form-group">
@@ -68,6 +103,17 @@ const Signup = () => {
               <div className="form-group">
                 <label>Email <span className="required">*</span></label>
                 <input type="email" name="email" placeholder="Enter your email" required onChange={handleChange} />
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="form-group">
+                <label>Password <span className="required">*</span></label>
+                <input type="password" name="password" placeholder="Enter your password" required onChange={handleChange} />
+              </div>
+              <div className="form-group">
+                <label>Confirm Password <span className="required">*</span></label>
+                <input type="password" name="confirmPassword" placeholder="Confirm password" required onChange={handleChange} />
               </div>
             </div>
 
