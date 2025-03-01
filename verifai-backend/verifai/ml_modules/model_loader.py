@@ -1,25 +1,3 @@
-import pickle
-<<<<<<< HEAD
-
-def load_model(model_file_path: str):
-    """
-    Loads a model from a pickle file.
-    
-    Args:
-        model_file_path: Path to the pickle file containing the model.
-    
-    Returns:
-        The loaded model.
-    
-    Raises:
-        ValueError: If the model does not have a 'predict' method.
-    """
-    with open(model_file_path, 'rb') as f:
-        model = pickle.load(f)
-    if not hasattr(model, 'predict'):
-        raise ValueError("The loaded model does not implement a 'predict' method.")
-    return model
-=======
 import numpy as np
 
 from diffprivlib.models import GaussianNB as DPGaussianNB
@@ -80,4 +58,3 @@ def load_model(file_path: str, epsilon, num_features):
         raise ValueError(f"DP model for name '{model_name}' is not supported.")
     
     return model, original_model, dp_model
->>>>>>> 187071fb9c53c32e4978d936c105fb515e8ae976

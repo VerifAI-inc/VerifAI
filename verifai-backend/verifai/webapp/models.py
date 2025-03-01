@@ -28,16 +28,16 @@ class Session(models.Model):
 
 # Uploaded Model
 class UploadedModel(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="uploaded_models")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="uploaded_models", db_index=True)
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to="models/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 # Uploaded Dataset
 class UploadedDataset(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="uploaded_datasets")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="uploaded_datasets", db_index=True)
     name = models.CharField(max_length=255)
     label_name = models.CharField(max_length=255)
     pa_name = models.CharField(max_length=255)
@@ -68,7 +68,7 @@ class AccuracyResult(models.Model):
 # Report History
 class ReportHistory(models.Model):
     session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name="report_history")
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateTimeField(auto_now_add=True, db_index=True)
     name = models.CharField(max_length=255)
     content = models.TextField()
 
