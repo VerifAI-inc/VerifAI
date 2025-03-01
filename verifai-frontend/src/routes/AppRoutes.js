@@ -9,6 +9,7 @@ import Reports from "../pages/Reports";
 import Profile from "../pages/Profile";
 import Contact from "../pages/Contact";
 import Tables from "../pages/Tables";  
+import ForgotPassword from "../pages/ForgotPassword";
 
 const AppRoutes = () => {
   return (
@@ -22,6 +23,7 @@ const AppRoutes = () => {
       <Route path="/profile" element={<Profile />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/tables" element={<Tables />} /> 
+      <Route path="/forgotpassword" element={<ForgotPassword />} /> 
     </Routes>
   );
 };

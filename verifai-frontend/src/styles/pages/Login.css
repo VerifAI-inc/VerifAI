@@ -1,22 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+/* Login Page Container */
 .login-container {
-    display: flex;
-    height: 100vh;
     font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    color: white;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0d0d26, #111132);
 }
 
+/* Adding the Mouse-Following Light Effect */
+.login-container::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at var(--mouseX, 50%) var(--mouseY, 50%), 
+                rgba(100, 50, 250, 0.4), rgba(0, 0, 0, 0));
+    mix-blend-mode: screen;
+    pointer-events: none;
+    transition: background 0.1s ease-out;
+}
+
+/* Left Section (Welcome Text) */
 .login-left {
     flex: 0.8;
-    background: linear-gradient(to right, #1e1e2f, #2a2a3e);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
     text-align: center;
+    padding: 40px;
+    color: white;
 }
 
 .login-left h2 {
-    font-size: 2rem;
+    font-size: 2.5rem;
+    font-family: 'Anton', sans-serif;
     font-weight: bold;
 }
 
@@ -25,16 +51,22 @@
     margin-top: 10px;
 }
 
+/* Right Section (Login Form) */
 .login-right {
     flex: 1.2;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 50px;
-    background: #f9f9f9;
+    padding: 60px; /* Increased padding */
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.05);
+    max-width: 500px; /* Limits how wide the form stretches */
+    margin-right: 40px; /* Moves the form slightly inward */
 }
 
+/* Login Form */
 .login-title {
     font-size: 2rem;
     font-weight: bold;
@@ -42,6 +74,7 @@
     text-align: center;
 }
 
+/* Form Fields */
 .login-form {
     width: 100%;
     max-width: 400px;
@@ -53,7 +86,7 @@
 .form-group {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 100%;
 }
 
 .form-group label {
@@ -67,15 +100,21 @@
     font-weight: bold;
 }
 
-.login-container .form-group input {
-    width: 90%;
+/* Input Fields */
+.form-group input {
+    width: 100%;
     padding: 14px;
     border-radius: 6px;
-    border: 1px solid #ccc;
-    background: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
     font-size: 1rem;
+    color: white;
     outline: none;
     transition: border 0.3s ease-in-out;
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .form-group input:focus {
@@ -83,34 +122,36 @@
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
+/* Login Button */
 .login-button {
     width: 100%;
     padding: 12px;
     font-size: 1.1rem;
     font-weight: bold;
     text-transform: uppercase;
-    background: linear-gradient(to right, #4a90e2, #0056b3);
+    background: linear-gradient(to right, #7d2eff, #5a1bdc);
     border: none;
     color: white;
     border-radius: 25px;
     cursor: pointer;
     transition: 0.3s ease-in-out;
     margin-top: 10px;
-    box-shadow: 0 5px 10px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 5px 10px rgba(120, 60, 240, 0.3);
 }
 
 .login-button:hover {
-    background: linear-gradient(to right, #0056b3, #004085);
+    background: linear-gradient(to right, #5a1bdc, #3b0fb3);
     transform: scale(1.03);
 }
 
+/* Signup Link */
 .login-footer p {
     font-size: 1rem;
     text-align: center;
 }
 
 .signup-link {
-    color: #007bff;
+    color: #4facfe;
     font-weight: bold;
     text-decoration: none;
     margin-left: 5px;
@@ -120,14 +161,7 @@
     text-decoration: underline;
 }
 
-.login-page .footer {
-    margin-top: 50px; 
-}
-
-.login-page .footer-container {
-    padding-top: 15px; 
-}
-
+/* Responsive Adjustments */
 @media (max-width: 768px) {
     .login-container {
         flex-direction: column;

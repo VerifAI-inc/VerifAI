@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/pages/Signup.css";
 
@@ -11,6 +11,17 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+
+  // Mouse Light Effect
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const { clientX: x, clientY: y } = e;
+      document.documentElement.style.setProperty("--mouseX", `${x}px`);
+      document.documentElement.style.setProperty("--mouseY", `${y}px`);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,8 +49,6 @@ const Signup = () => {
         <div className="signup-right">
           <h1 className="signup-title">Create an Account</h1>
           <form className="signup-form" onSubmit={handleSubmit}>
-
-            {/* First Row - First Name & Last Name */}
             <div className="row">
               <div className="form-group">
                 <label>First Name <span className="required">*</span></label>
@@ -51,7 +60,6 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Second Row - Username & Email */}
             <div className="row">
               <div className="form-group">
                 <label>Username <span className="required">*</span></label>
@@ -63,26 +71,12 @@ const Signup = () => {
               </div>
             </div>
 
-            {/* Third Row - Password & Confirm Password */}
-            <div className="row">
-              <div className="form-group">
-                <label>Password <span className="required">*</span></label>
-                <input type="password" name="password" placeholder="Enter your password" required onChange={handleChange} />
-              </div>
-              <div className="form-group">
-                <label>Confirm Password <span className="required">*</span></label>
-                <input type="password" name="confirmPassword" placeholder="Re-enter your password" required onChange={handleChange} />
-              </div>
-            </div>
-
-            {/* Sign Up Button */}
             <button type="submit" className="signup-button">Sign Up</button>
 
-            {/* Login Redirect */}
-            <div className="signup-footer">
-              <p>Already have an account? 
-                <Link to="/login" className="login-link"> Log in here</Link>.
-              </p>
+            <div className="login-footer">
+                        <p>Already have an account?  
+                          <Link to="/login" className="login-link"> Log in here</Link>.
+                        </p>
             </div>
           </form>
         </div>

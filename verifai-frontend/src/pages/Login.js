@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/pages/Login.css";
 
@@ -7,6 +7,17 @@ const Login = () => {
     userInput: "",
     password: "",
   });
+
+  // Mouse Light Effect
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const { clientX: x, clientY: y } = e;
+      document.documentElement.style.setProperty("--mouseX", `${x}px`);
+      document.documentElement.style.setProperty("--mouseY", `${y}px`);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -56,8 +67,10 @@ const Login = () => {
           {/* Login Button */}
           <button type="submit" className="login-button">Login</button>
 
-          {/* Signup Redirect */}
           <div className="login-footer">
+            <p>Forgot your password?  
+              <Link to="/forgotpassword" className="forgot-password-link"> Reset it</Link>.
+            </p>
             <p>Don't have an account?  
               <Link to="/signup" className="signup-link"> Sign up here</Link>.
             </p>
