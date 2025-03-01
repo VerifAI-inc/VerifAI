@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/pages/Login.css";
 
 const Login = () => {
@@ -7,6 +7,9 @@ const Login = () => {
     userInput: "",
     password: "",
   });
+
+  const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Hook for navigation
 
   // Mouse Light Effect
   useEffect(() => {
@@ -23,9 +26,35 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login Data:", formData);
+    setError(null);
+
+    const requestData = {
+      username: formData.userInput, // Adjust based on backend handling
+      password: formData.password,
+    };
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/auth/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("authToken", data.token); // Store token (if using JWT later)
+        localStorage.setItem("username", requestData.username);
+        navigate("/profile"); // Redirect to profile page
+      } else {
+        setError(data.error || "Invalid login credentials.");
+      }
+    } catch (err) {
+      setError("Server error. Please try again later.");
+    }
   };
 
   return (
@@ -39,6 +68,7 @@ const Login = () => {
       {/* Right Side: Login Form */}
       <div className="login-right">
         <h1 className="login-title">Sign In</h1>
+        {error && <p className="error-message">{error}</p>}
         <form className="login-form" onSubmit={handleSubmit}>
           {/* Email or Username */}
           <div className="form-group">
