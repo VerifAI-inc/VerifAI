@@ -6,44 +6,76 @@ import { FaUserCircle } from "react-icons/fa"; // Import user icon
 const Navbar = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("authToken")); // Initial state check
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("accessToken")); // Check stored JWT
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // Function to refresh the access token if expired
+  const refreshToken = async () => {
+    const storedRefreshToken = localStorage.getItem("refreshToken");
+
+    if (!storedRefreshToken) {
+      handleLogout(); // If no refresh token, log out the user
+      return;
+    }
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/auth/token/refresh/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh: storedRefreshToken }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("accessToken", data.access);
+        setIsLoggedIn(true);
+      } else {
+        handleLogout(); // Logout if refresh fails
+      }
+    } catch (error) {
+      console.error("Token refresh failed:", error);
+      handleLogout(); // Logout on failure
+    }
+  };
 
   // Handle Logout
   const handleLogout = async () => {
-  try {
-    const refreshToken = localStorage.getItem("refreshToken");
+    try {
+      const refreshToken = localStorage.getItem("refreshToken");
 
-    await fetch("http://127.0.0.1:8000/auth/logout/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ refresh_token: refreshToken }),
-    });
-  } catch (error) {
-    console.error("Logout failed:", error);
-  }
+      await fetch("http://127.0.0.1:8000/auth/logout/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
 
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  localStorage.removeItem("username");
-  setIsLoggedIn(false);
-  navigate("/");
-};
+    // Remove tokens from localStorage
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("username");
+
+    setIsLoggedIn(false);
+    navigate("/");
+  };
 
   // Ensure Navbar updates when login state changes
   useEffect(() => {
     const handleStorageChange = () => {
-      setIsLoggedIn(!!localStorage.getItem("authToken"));
+      setIsLoggedIn(!!localStorage.getItem("accessToken"));
     };
 
     // Listen for changes in localStorage
     window.addEventListener("storage", handleStorageChange);
-    
-    // Check state again when the component mounts
-    handleStorageChange();
+
+    // Refresh token every 25 minutes to keep session alive
+    const interval = setInterval(refreshToken, 25 * 60 * 1000);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      clearInterval(interval);
     };
   }, []);
 

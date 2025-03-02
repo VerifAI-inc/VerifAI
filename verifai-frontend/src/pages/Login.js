@@ -46,10 +46,11 @@ const Login = () => {
   
       const data = await response.json();
       if (response.ok) {
-        // Store auth state **only if login succeeds**
-        localStorage.setItem("authToken", data.token);
+        // Store JWT tokens in localStorage
+        localStorage.setItem("accessToken", data.access_token);
+        localStorage.setItem("refreshToken", data.refresh_token);
         localStorage.setItem("username", requestData.username);
-        
+  
         // Dispatch event to trigger Navbar update
         window.dispatchEvent(new Event("storage"));
   
