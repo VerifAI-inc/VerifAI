@@ -29,12 +29,12 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
+  
     const requestData = {
       username: formData.userInput, // Adjust based on backend handling
       password: formData.password,
     };
-
+  
     try {
       const response = await fetch("http://127.0.0.1:8000/auth/login/", {
         method: "POST",
@@ -43,12 +43,18 @@ const Login = () => {
         },
         body: JSON.stringify(requestData),
       });
-
+  
       const data = await response.json();
       if (response.ok) {
-        localStorage.setItem("authToken", data.token); // Store token (if using JWT later)
+        // Store auth state **only if login succeeds**
+        localStorage.setItem("authToken", data.token);
         localStorage.setItem("username", requestData.username);
-        navigate("/profile"); // Redirect to profile page
+        
+        // Dispatch event to trigger Navbar update
+        window.dispatchEvent(new Event("storage"));
+  
+        // Redirect to profile page
+        navigate("/profile");
       } else {
         setError(data.error || "Invalid login credentials.");
       }
@@ -72,7 +78,7 @@ const Login = () => {
         <form className="login-form" onSubmit={handleSubmit}>
           {/* Email or Username */}
           <div className="form-group">
-            <label>Enter Email or Username <span className="required">*</span></label>
+            <label>Email or Username <span className="required">*</span></label>
             <input 
               type="text" 
               name="userInput" 

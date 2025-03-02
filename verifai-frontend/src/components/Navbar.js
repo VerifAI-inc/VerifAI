@@ -1,18 +1,51 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/components/Navbar.css";
 import { FaUserCircle } from "react-icons/fa"; // Import user icon
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
-  const [dropdownOpen, setDropdownOpen] = useState(false); // Track dropdown menu state
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("authToken")); // Initial state check
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Handle Logout
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setDropdownOpen(false);
-  };
+  const handleLogout = async () => {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    await fetch("http://127.0.0.1:8000/auth/logout/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+  } catch (error) {
+    console.error("Logout failed:", error);
+  }
+
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("username");
+  setIsLoggedIn(false);
+  navigate("/");
+};
+
+  // Ensure Navbar updates when login state changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem("authToken"));
+    };
+
+    // Listen for changes in localStorage
+    window.addEventListener("storage", handleStorageChange);
+    
+    // Check state again when the component mounts
+    handleStorageChange();
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
 
   return (
     <nav className="navbar">
@@ -32,7 +65,7 @@ const Navbar = () => {
         {/* Show Log In or User Profile Dropdown */}
         <li className="user-menu">
           {!isLoggedIn ? (
-            <Link to="/login" className="login-button" onClick={() => setIsLoggedIn(true)}>
+            <Link to="/login" className="login-button">
               Log In
             </Link>
           ) : (

@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.contrib.auth.models import User
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -49,3 +49,8 @@ class LoginView(APIView):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class LogoutView(APIView):
+    def post(self, request):
+        logout(request)  # Clear session
+        return Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)

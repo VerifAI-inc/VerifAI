@@ -10,20 +10,28 @@ import Profile from "../pages/Profile";
 import Contact from "../pages/Contact";
 import Tables from "../pages/Tables";  
 import ForgotPassword from "../pages/ForgotPassword";
+import ProtectedRoute from "./ProtectedRoute"; // Import ProtectedRoute
+import PublicRoute from "./PublicRoute"; // Import PublicRoute
 
 const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/upload" element={<Upload />} />
-      <Route path="/results" element={<Results />} />
-      <Route path="/reports" element={<Reports />} />
-      <Route path="/profile" element={<Profile />} />
+      
+      {/* Public Routes (Prevent access if already logged in) */}
+      <Route path="/login" element={<PublicRoute element={<Login />} />} />
+      <Route path="/signup" element={<PublicRoute element={<Signup />} />} />
+      
+      {/* Protected Routes (Require login) */}
+      <Route path="/upload" element={<ProtectedRoute element={<Upload />} />} />
+      <Route path="/results" element={<ProtectedRoute element={<Results />} />} />
+      <Route path="/reports" element={<ProtectedRoute element={<Reports />} />} />
+      <Route path="/profile" element={<ProtectedRoute element={<Profile />} />} />
+      <Route path="/tables" element={<ProtectedRoute element={<Tables />} />} />
+      
+      {/* Public Route (Anyone can access) */}
       <Route path="/contact" element={<Contact />} />
-      <Route path="/tables" element={<Tables />} /> 
-      <Route path="/forgotpassword" element={<ForgotPassword />} /> 
+      <Route path="/forgotpassword" element={<ForgotPassword />} />
     </Routes>
   );
 };
