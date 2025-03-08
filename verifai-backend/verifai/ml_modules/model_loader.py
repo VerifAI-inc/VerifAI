@@ -1,3 +1,4 @@
+import pickle
 import numpy as np
 
 from diffprivlib.models import GaussianNB as DPGaussianNB
@@ -41,19 +42,35 @@ def load_model(file_path: str, epsilon, num_features):
     # Based on the model name, create the corresponding DP model.
     if model_name == "RandomForestClassifier":
         original_model = RandomForestClassifier(**params)
-        dp_model = DPRandomForestClassifier(**params, epsilon = epsilon, bounds=(0, 1), classes = [0,1], random_state=42)
+        if params["random_state"] == None:
+            params.pop("random_state", None) # it will return error because both params have random_state and our DP model.
+            dp_model = DPRandomForestClassifier(**params, epsilon = epsilon, bounds=(0, 1), classes = [0,1], random_state=42)
+        else: 
+            dp_model = DPRandomForestClassifier(**params, epsilon = epsilon, bounds=(0, 1), classes = [0,1])
     elif model_name == "LinearRegression":
         original_model = LinearRegression(**params)
-        dp_model = DPLinearRegression(**params, epsilon = epsilon, bounds_X=(0, 1), bounds_y=(0, 1), random_state=42)
+        if params["random_state"] == None:
+            params.pop("random_state", None) # it will return error because both params have random_state and our DP model.
+            dp_model = DPLinearRegression(**params, epsilon = epsilon, bounds_X=(0, 1), bounds_y=(0, 1), random_state=42)
+        else:
+            dp_model = DPLinearRegression(**params, epsilon = epsilon, bounds_X=(0, 1), bounds_y=(0, 1))
     elif model_name == "GaussianNB":
         original_model = GaussianNB(**params)
-        dp_model = DPGaussianNB(**params, epsilon = epsilon, bounds=(0, 1))
+        if params["random_state"] == None:
+            params.pop("random_state", None) # it will return error because both params have random_state and our DP model.
+            dp_model = DPGaussianNB(**params, epsilon = epsilon, bounds=(0, 1), random_state=42)
+        else:
+            dp_model = DPGaussianNB(**params, epsilon = epsilon, bounds=(0, 1))
     elif model_name == "LogisticRegression":
         original_model = LogisticRegression(**params)
-        dp_model = DPLogisticRegression(**params, epsilon = epsilon, data_norm=np.sqrt(num_features))
+        if params["random_state"] == None:
+            params.pop("random_state", None) # it will return error because both params have random_state and our DP model.
+            dp_model = DPLogisticRegression(**params, epsilon = epsilon, data_norm=np.sqrt(num_features), random_state=42)
+        else:
+            dp_model = DPLogisticRegression(**params, epsilon = epsilon, data_norm=np.sqrt(num_features))
     elif model_name == "KMeans":
         original_model = KMeans(**params)
-        dp_model = DPKMeans(**params, n_clusters =params[n_clusters] , epsilon = epsilon, bounds=(0, 1))
+        # dp_model = DPKMeans(**params, n_clusters =params[n_clusters] , epsilon = epsilon, bounds=(0, 1))
     else:
         raise ValueError(f"DP model for name '{model_name}' is not supported.")
     
