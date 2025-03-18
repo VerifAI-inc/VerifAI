@@ -2,35 +2,33 @@ import pandas as pd
 from aif360.datasets import BinaryLabelDataset
 from sklearn.preprocessing import MinMaxScaler
 
-def load_dataset(dataset_path: str, label_name, protected_attribute_name, favorable_label, privileged_attribute):
-
-    # Load dataset
+def load_dataset(dataset_path: str, label_name, protected_attribute_name, favorable_label):
     dataframe = pd.read_csv(dataset_path)
 
-    # Convert label column: Favorable label → 1, Others → 0
-    dataframe[label_name] = (dataframe[label_name] == favorable_label).astype(int)
+    # Ensure the label column is categorical for consistency
+    dataframe[label_name] = dataframe[label_name].astype(str)
+    favorable_label = str(favorable_label)  # Ensure consistency in string format
 
-    # Convert protected attribute: Privileged attribute → 1, Others → 0
-    dataframe[protected_attribute_name] = (dataframe[protected_attribute_name] == privileged_attribute).astype(int)
+    # Identify unfavorable label (anything not equal to favorable label)
+    unique_labels = dataframe[label_name].unique()
+    unfavorable_label = unique_labels[unique_labels != favorable_label][0]  # Ensure it's a scalar
 
-    # Convert to AIF360 BinaryLabelDataset
+    # Convert dataset to BinaryLabelDataset
     dataset = BinaryLabelDataset(
         df=dataframe,
         label_names=[label_name],
         protected_attribute_names=[protected_attribute_name],
-        favorable_label=1,
-        unfavorable_label=0 
+        favorable_label=favorable_label,
+        unfavorable_label=unfavorable_label
     )
 
-    # Normalize features using Min-Max Scaling
+    # Normalize feature values
     scaler = MinMaxScaler(feature_range=(0, 1))
     dataset.features = scaler.fit_transform(dataset.features)
 
-    # Extract feature matrix (X) and target variable (y)
+    # Extract X (features), y (labels), and protected attribute index
     X = dataset.features
     y = dataset.labels.ravel().astype(int)
-
-    # Get the index of the protected attribute in the dataframe
     protected_attribute_index = dataframe.columns.get_loc(protected_attribute_name)
 
     return X, y, protected_attribute_index, dataset, dataframe, protected_attribute_name, label_name
