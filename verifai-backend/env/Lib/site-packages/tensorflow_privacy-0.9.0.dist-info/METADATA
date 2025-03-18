@@ -1,0 +1,21 @@
+Metadata-Version: 2.1
+Name: tensorflow_privacy
+Version: 0.9.0
+Summary: A privacy-focused machine learning framework
+Home-page: https://github.com/tensorflow/privacy
+License: Apache-2.0
+Requires-Python: >=3.9.0,<3.12
+Description-Content-Type: text/plain
+License-File: LICENSE
+Requires-Dist: absl-py ==1.*,>=1.0
+Requires-Dist: dm-tree ==0.1.8
+Requires-Dist: dp-accounting ==0.4.3
+Requires-Dist: numpy ~=1.21
+Requires-Dist: packaging ~=22.0
+Requires-Dist: scikit-learn ==1.*,>=1.0
+Requires-Dist: scipy ~=1.9
+Requires-Dist: tensorflow-estimator ~=2.4
+Requires-Dist: tensorflow-probability ~=0.22.0
+Requires-Dist: tensorflow ~=2.4
+
+A Python library that includes implementations of TensorFlow optimizers for training machine learning models with differential privacy.
