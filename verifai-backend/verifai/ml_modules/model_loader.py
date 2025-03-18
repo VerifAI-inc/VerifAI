@@ -30,9 +30,6 @@ def load_model(file_path: str, epsilon, num_features):
         "LinearRegression", "KMeans"
     }
 
-    # if model_name not in supported_models:
-    #     raise ValueError(f"Unsupported model type: {model_name}. Please upload a valid scikit-learn model that IBM supports.")
-
     # Create a temporary DP model to check valid parameters
     dp_model_class = {
     "RandomForestClassifier": DPRandomForestClassifier,
@@ -77,7 +74,5 @@ def load_model(file_path: str, epsilon, num_features):
     else:
         original_model = model.__class__(**params)
         dp_model = DPRandomForestClassifier(epsilon=epsilon, bounds=(0, 1), classes=[0, 1])
-
-    
 
     return model, original_model, dp_model
