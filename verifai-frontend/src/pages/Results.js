@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Slider from "../components/Slider";
-import { FaDownload } from "react-icons/fa";
+import { FaDownload, FaArrowLeft } from "react-icons/fa";
 import "../styles/Global.css";
 import "../styles/pages/Results.css";
-import example1 from "../assets/graphs/example1.png"; 
+import example1 from "../assets/graphs/example1.png";
 import example2 from "../assets/graphs/example2.png";
+import { Link } from "react-router-dom";
 
 const Results = () => {
   const [epsilon, setEpsilon] = useState(1.0);
@@ -15,6 +16,18 @@ const Results = () => {
 
   return (
     <div className="results-container">
+      <div className="results-actions">
+        <Link to="/upload" className="btn back-btn">
+          <FaArrowLeft className="icon-space" />
+          Back to Upload
+        </Link>
+
+        <button className="download-btn">
+          <FaDownload className="icon-space" />
+          Download Graphs
+        </button>
+      </div>
+
       {/* Title & Description */}
       <div className="results-header">
         <h1 className="results-title">Results Analysis</h1>
@@ -23,18 +36,11 @@ const Results = () => {
         </p>
       </div>
 
-      {/* Download Button */}
-      <div className="download-section">
-        <button className="download-btn">
-          <FaDownload /> Download Graphs
-        </button>
-      </div>
-
       {/* Slider */}
       <div className="slider-container">
         <Slider value={epsilon} onChange={handleSliderChange} label="Epsilon (ε)" />
       </div>
-      
+
       {/* Graphs Section */}
       <div className="graphs-container">
         <div className="graph-card">

@@ -28,7 +28,8 @@ def log_loss(labels: np.ndarray,
 
     if from_logits:
         pred = special.softmax(pred, axis=-1)
-    return -np.log(np.maximum(pred[np.arange(labels.size), labels], small_value)) * sample_weight
+
+    return -np.log(np.maximum(pred[np.arange(labels.size), labels.astype(int)], small_value)) * sample_weight
 
 def calculate_statistic(probabilities: np.ndarray,
                         labels: np.ndarray,
@@ -39,7 +40,7 @@ def calculate_statistic(probabilities: np.ndarray,
     """
     if convert_to_prob:
         probabilities = special.softmax(probabilities, axis=-1)
-    stat = probabilities[np.arange(labels.size), labels]
+    stat = probabilities[np.arange(labels.size), labels.astype(int)]
     if sample_weight is not None:
         stat *= sample_weight
     return stat

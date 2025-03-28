@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
-from metrics import get_stat_and_loss_tabular, calculate_subpopulation_accuracies, get_metrics
+from .metrics import get_stat_and_loss_tabular, calculate_subpopulation_accuracies, get_metrics
 from tensorflow_privacy.privacy.privacy_tests.membership_inference_attack import advanced_mia as amia, membership_inference_attack as mia
 from tensorflow_privacy.privacy.privacy_tests.membership_inference_attack.data_structures import AttackInputData
-from oversampling import synthetic
+from .oversampling import synthetic
 from fairlearn.reductions import EqualizedOdds
 
 # Fairness-related Pre-/In-processing

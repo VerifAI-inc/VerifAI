@@ -6,38 +6,34 @@ class User(AbstractUser):
     job_role = models.CharField(max_length=255, blank=True, null=True)
     job_field = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    groups = models.ManyToManyField(Group, related_name="custom_user_groups", blank=True)
-    user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions", blank=True)
+    
+    groups = models.ManyToManyField(Group, related_name="custom_user_groups")
+    user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions")
 
 # Session Table
 class Session(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     dp_model_type = models.CharField(max_length=255)
     dp_model_parameters = models.JSONField()
     mitigators = models.CharField(max_length=255)
     epsilon = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    
     class Meta:
-        indexes = [
-            models.Index(fields=['user']),
-            models.Index(fields=['epsilon']),
-            models.Index(fields=['user', 'created_at'])
-        ]
+        indexes = [models.Index(fields=['user', 'epsilon'])] # Add index for performance
 
-# Uploaded Model
+# Uploaded Model (ML Model)
 class UploadedModel(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="uploaded_models", db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session = models.OneToOneField(Session, on_delete=models.CASCADE) 
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to="models/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
 # Uploaded Dataset
 class UploadedDataset(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_index=True)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, related_name="uploaded_datasets", db_index=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     label_name = models.CharField(max_length=255)
     pa_name = models.CharField(max_length=255)
@@ -46,31 +42,57 @@ class UploadedDataset(models.Model):
     file = models.FileField(upload_to="datasets/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-# Fairness Evaluation Result
+# Fairness Evaluation Result (One-to-One with Session)
 class FairnessEvaluationResult(models.Model):
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name="fairness_result")
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    epsilon = models.FloatField()
     with_dp = models.BooleanField()
     mitigator = models.CharField(max_length=255)
+    bal_acc = models.FloatField(null=True, blank=True)
     avg_odds_diff = models.FloatField(null=True, blank=True)
+    disp_imp = models.FloatField(null=True, blank=True)
+    stat_par_diff = models.FloatField(null=True, blank=True)
+    eq_opp_diff = models.FloatField(null=True, blank=True)
+    theil_ind = models.FloatField(null=True, blank=True)
+    
+    class Meta:
+        indexes = [models.Index(fields=['session', 'epsilon'])] # Index for faster lookups
 
-# Privacy Evaluation Result
+# Privacy Evaluation Result (One-to-One with Session)
 class PrivacyEvaluationResult(models.Model):
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name="privacy_result")
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    epsilon = models.FloatField()
     with_dp = models.BooleanField()
     privacy_risk_g0_minus = models.FloatField(null=True, blank=True)
+    privacy_risk_g0_plus = models.FloatField(null=True, blank=True)
+    privacy_risk_g1_minus = models.FloatField(null=True, blank=True)
+    privacy_risk_g1_plus = models.FloatField(null=True, blank=True)
+    
+    class Meta:
+        indexes = [models.Index(fields=['session', 'epsilon'])]
 
-# Accuracy Result
+# Accuracy Results (One-to-One with Session)
 class AccuracyResult(models.Model):
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name="accuracy_result")
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    epsilon = models.FloatField()
     mitigator = models.CharField(max_length=255)
+    total_train_acc = models.FloatField(null=True, blank=True)
     total_test_acc = models.FloatField(null=True, blank=True)
+    train_acc_g0_minus = models.FloatField(null=True, blank=True)
+    train_acc_g0_plus = models.FloatField(null=True, blank=True)
+    train_acc_g1_minus = models.FloatField(null=True, blank=True)
+    train_acc_g1_plus = models.FloatField(null=True, blank=True)
+    test_acc_g0_minus = models.FloatField(null=True, blank=True)
+    test_acc_g0_plus = models.FloatField(null=True, blank=True)
+    test_acc_g1_minus = models.FloatField(null=True, blank=True)
+    test_acc_g1_plus = models.FloatField(null=True, blank=True)
+    
+    class Meta:
+        indexes = [models.Index(fields=['session', 'epsilon'])]
 
 # Report History
 class ReportHistory(models.Model):
-    session = models.OneToOneField(Session, on_delete=models.CASCADE, related_name="report_history")
-    creation_date = models.DateTimeField(auto_now_add=True, db_index=True)
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    creation_date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=255)
     content = models.TextField()
-
-    class Meta:
-        ordering = ["-creation_date"]

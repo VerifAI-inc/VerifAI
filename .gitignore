@@ -402,4 +402,5 @@ FodyWeavers.xsd
 # MacOS beauty
 .DS_Store
 
-verifai-backend/env/
+verifai-backend/myenv/
+/verifai-backend/myenv/

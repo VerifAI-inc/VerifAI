@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.metrics import accuracy_score
 from aif360.datasets import BinaryLabelDataset
 from aif360.metrics import ClassificationMetric
-from utils import log_loss, calculate_statistic
+from .utils import log_loss, calculate_statistic
 
 def get_stat_and_loss_tabular(model, x, y, batch_size=256, use_proba: bool = True):
     """
