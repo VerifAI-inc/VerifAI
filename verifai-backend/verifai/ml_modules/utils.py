@@ -10,6 +10,9 @@ def log_loss(labels: np.ndarray,
     """
     Computes the per-example cross-entropy loss.
     """
+    # Ensure labels are integers
+    labels = labels.astype(int)
+    
     if labels.shape[0] != pred.shape[0]:
         raise ValueError('Mismatch between labels and predictions.')
     if sample_weight is None:
@@ -17,6 +20,7 @@ def log_loss(labels: np.ndarray,
     else:
         if np.shape(sample_weight)[0] != np.shape(labels)[0]:
             raise ValueError('Sample weights and labels must have the same length.')
+
     if pred.size == pred.shape[0]:
         pred = pred.flatten()
         if from_logits:
@@ -28,8 +32,9 @@ def log_loss(labels: np.ndarray,
 
     if from_logits:
         pred = special.softmax(pred, axis=-1)
+    # Now labels is guaranteed to be integer for indexing.
+    return -np.log(np.maximum(pred[np.arange(labels.size), labels], small_value)) * sample_weight
 
-    return -np.log(np.maximum(pred[np.arange(labels.size), labels.astype(int)], small_value)) * sample_weight
 
 def calculate_statistic(probabilities: np.ndarray,
                         labels: np.ndarray,
@@ -38,9 +43,11 @@ def calculate_statistic(probabilities: np.ndarray,
     """
     Calculates, for each example, the probability assigned to the true class.
     """
+    labels = labels.astype(int)
+
     if convert_to_prob:
         probabilities = special.softmax(probabilities, axis=-1)
-    stat = probabilities[np.arange(labels.size), labels.astype(int)]
+    stat = probabilities[np.arange(labels.size), labels]
     if sample_weight is not None:
         stat *= sample_weight
     return stat

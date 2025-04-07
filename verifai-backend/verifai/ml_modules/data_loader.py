@@ -9,9 +9,12 @@ def load_dataset(dataset_path: str, label_name, protected_attribute_name, favora
     dataframe[label_name] = dataframe[label_name].astype(str)
     favorable_label = str(favorable_label)  # Ensure consistency in string format
 
-    # Identify unfavorable label (anything not equal to favorable label)
     unique_labels = dataframe[label_name].unique()
-    unfavorable_label = unique_labels[unique_labels != favorable_label][0]  # Ensure it's a scalar
+    unfavorable_candidates = unique_labels[unique_labels != str(favorable_label)]
+    if len(unfavorable_candidates) != 1:
+        raise ValueError("There must be exactly one unfavorable label.")
+    unfavorable_label = unfavorable_candidates[0]
+
 
     # Convert dataset to BinaryLabelDataset
     dataset = BinaryLabelDataset(

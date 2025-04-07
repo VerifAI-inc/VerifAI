@@ -123,8 +123,8 @@ def train_orig(X, y, dataset_binary, protected_attribute_index, privileged_attri
         'overall_mean': overall_mean,
         'subgroup_results': subgroup_results,
         'subgroup_means': subgroup_means,
-        'train_accuracies': train_accuracies,
-        'test_accuracies': test_accuracies,
+        'train_accuracies': float(np.mean(train_accuracies)),
+        'test_accuracies': float(np.mean(test_accuracies)),
         'subpop_train': subpop_train_list,
         'subpop_test': subpop_test_list,
         'all_metrics': all_metrics
@@ -149,6 +149,11 @@ def train_dir(X, y, dataset_binary, protected_attribute_index, privileged_attrib
 
     favorable_label = dataset_binary.favorable_label
     unfavorable_label = dataset_binary.unfavorable_label
+    
+    protected_attribute_name = dataset_binary.feature_names[protected_attribute_index]
+
+    privileged_groups = [{protected_attribute_name: privileged_attribute}]
+    unprivileged_groups = [{protected_attribute_name: unprivileged_attribute}]
     
     # Define subgroup conditions (for membership inference on subpopulations)
     subgroups = {
@@ -242,8 +247,8 @@ def train_dir(X, y, dataset_binary, protected_attribute_index, privileged_attrib
         'overall_mean': overall_mean,
         'subgroup_results': subgroup_results,
         'subgroup_means': subgroup_means,
-        'train_accuracies': train_accuracies,
-        'test_accuracies': test_accuracies,
+        'train_accuracies': float(np.mean(train_accuracies)),
+        'test_accuracies': float(np.mean(test_accuracies)),
         'subpop_train': subpop_train_list,
         'subpop_test': subpop_test_list,
         'all_metrics': all_metrics
@@ -280,7 +285,7 @@ def train_syn(X, y, dataset_binary, protected_attribute_index, privileged_attrib
     protected_attribute_name = dataset_binary.feature_names[protected_attribute_index]
 
     privileged_groups = [{protected_attribute_name: privileged_attribute}]
-    unprivileged_groups = [{protected_attribute_name: privileged_attribute}]
+    unprivileged_groups = [{protected_attribute_name: unprivileged_attribute}]
     
     metric_orig = BinaryLabelDatasetMetric(dataset_binary,
                                              unprivileged_groups=unprivileged_groups,
@@ -382,8 +387,8 @@ def train_syn(X, y, dataset_binary, protected_attribute_index, privileged_attrib
         'overall_mean': overall_mean,
         'subgroup_results': subgroup_results,
         'subgroup_means': subgroup_means,
-        'train_accuracies': train_accuracies,
-        'test_accuracies': test_accuracies,
+        'train_accuracies': float(np.mean(train_accuracies)),
+        'test_accuracies': float(np.mean(test_accuracies)),
         'subpop_train': subpop_train_list,
         'subpop_test': subpop_test_list,
         'all_metrics': all_metrics
@@ -419,7 +424,7 @@ def train_syn_target(X, y, dataset_binary, protected_attribute_index, privileged
     protected_attribute_name = dataset_binary.feature_names[protected_attribute_index]
 
     privileged_groups = [{protected_attribute_name: privileged_attribute}]
-    unprivileged_groups = [{protected_attribute_name: privileged_attribute}]
+    unprivileged_groups = [{protected_attribute_name: unprivileged_attribute}]
     
     metric_orig = BinaryLabelDatasetMetric(dataset_binary,
                                              unprivileged_groups=unprivileged_groups,
@@ -519,8 +524,8 @@ def train_syn_target(X, y, dataset_binary, protected_attribute_index, privileged
         'overall_mean': overall_mean,
         'subgroup_results': subgroup_results,
         'subgroup_means': subgroup_means,
-        'train_accuracies': train_accuracies,
-        'test_accuracies': test_accuracies,
+        'train_accuracies': float(np.mean(train_accuracies)),
+        'test_accuracies': float(np.mean(test_accuracies)),
         'subpop_train': subpop_train_list,
         'subpop_test': subpop_test_list,
         'all_metrics': all_metrics
@@ -530,7 +535,7 @@ def train_syn_target(X, y, dataset_binary, protected_attribute_index, privileged
 # Training function using Reweighing (a fairness pre-processing method)
 ###############################################################################
 def train_rew(X, y, dataset_binary, protected_attribute_index, privileged_attribute, unprivileged_attribute, 
-            shadow_model_builder, target_model_builder, num_shadows=5):
+              shadow_model_builder, target_model_builder, num_shadows=5):
 
     n_samples = X.shape[0]
     overall_results = []
@@ -547,7 +552,7 @@ def train_rew(X, y, dataset_binary, protected_attribute_index, privileged_attrib
     protected_attribute_name = dataset_binary.feature_names[protected_attribute_index]
 
     privileged_groups = [{protected_attribute_name: privileged_attribute}]
-    unprivileged_groups = [{protected_attribute_name: privileged_attribute}]
+    unprivileged_groups = [{protected_attribute_name: unprivileged_attribute}]
     
     subgroups = {
         'Privileged Favorable': ((X[:, protected_attribute_index] == privileged_attribute) & (y == favorable_label)),
@@ -585,6 +590,7 @@ def train_rew(X, y, dataset_binary, protected_attribute_index, privileged_attrib
                 model.fit(X_train, y_train)
             
             if i == target_idx:
+                # Compute predictions and accuracies for target model
                 pred_train = model.predict(X_train)
                 pred_test = model.predict(X_val)
                 train_accuracies.append(accuracy_score(y_train, pred_train))
@@ -595,6 +601,25 @@ def train_rew(X, y, dataset_binary, protected_attribute_index, privileged_attrib
                 subpop_test = calculate_subpopulation_accuracies(X_val, y_val, protected_attribute_index, model)
                 subpop_train_list.append(subpop_train)
                 subpop_test_list.append(subpop_test)
+                
+                # --- NEW CODE: Print lengths of subpopulations in train and test splits ---
+                print("Subpopulation sizes (Train & Test) for target model:")
+                for group in ["Privileged Favorable", "Unprivileged Favorable", "Unprivileged Unfavorable", "Privileged Unfavorable"]:
+                    if group == "Privileged Favorable":
+                        cond_train = (X_train[:, protected_attribute_index] == privileged_attribute) & (y_train == favorable_label)
+                        cond_test = (X_val[:, protected_attribute_index] == privileged_attribute) & (y_val == favorable_label)
+                    elif group == "Unprivileged Favorable":
+                        cond_train = (X_train[:, protected_attribute_index] == unprivileged_attribute) & (y_train == favorable_label)
+                        cond_test = (X_val[:, protected_attribute_index] == unprivileged_attribute) & (y_val == favorable_label)
+                    elif group == "Unprivileged Unfavorable":
+                        cond_train = (X_train[:, protected_attribute_index] == unprivileged_attribute) & (y_train == unfavorable_label)
+                        cond_test = (X_val[:, protected_attribute_index] == unprivileged_attribute) & (y_val == unfavorable_label)
+                    elif group == "Privileged Unfavorable":
+                        cond_train = (X_train[:, protected_attribute_index] == privileged_attribute) & (y_train == unfavorable_label)
+                        cond_test = (X_val[:, protected_attribute_index] == privileged_attribute) & (y_val == unfavorable_label)
+                    print(f"  Train {group}: {np.sum(cond_train)} samples")
+                    print(f"  Test {group}: {np.sum(cond_test)} samples")
+                # --- End of new code ---
             
             stat, loss = get_stat_and_loss_tabular(model, X, y, use_proba=True)
             stats.append(stat)
@@ -638,8 +663,8 @@ def train_rew(X, y, dataset_binary, protected_attribute_index, privileged_attrib
         'overall_mean': overall_mean,
         'subgroup_results': subgroup_results,
         'subgroup_means': subgroup_means,
-        'train_accuracies': train_accuracies,
-        'test_accuracies': test_accuracies,
+        'train_accuracies': float(np.mean(train_accuracies)),
+        'test_accuracies': float(np.mean(test_accuracies)),
         'subpop_train': subpop_train_list,
         'subpop_test': subpop_test_list,
         'all_metrics': all_metrics
@@ -752,8 +777,8 @@ def train_eg(dataframe, dataset_binary, protected_attribute_index, privileged_at
         'overall_mean': overall_mean,
         'subgroup_results': subgroup_results,
         'subgroup_means': subgroup_means,
-        'train_accuracies': train_accuracies,
-        'test_accuracies': test_accuracies,
+        'train_accuracies': float(np.mean(train_accuracies)),
+        'test_accuracies': float(np.mean(test_accuracies)),
         'subpop_train': subpop_train_list,
         'subpop_test': subpop_test_list,
         'all_metrics': all_metrics

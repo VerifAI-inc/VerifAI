@@ -44,9 +44,9 @@ class UploadedDataset(models.Model):
 
 # Fairness Evaluation Result (One-to-One with Session)
 class FairnessEvaluationResult(models.Model):
-    session = models.OneToOneField(Session, on_delete=models.CASCADE)
-    epsilon = models.FloatField()
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
+    epsilon = models.FloatField()
     mitigator = models.CharField(max_length=255)
     bal_acc = models.FloatField(null=True, blank=True)
     avg_odds_diff = models.FloatField(null=True, blank=True)
@@ -54,26 +54,29 @@ class FairnessEvaluationResult(models.Model):
     stat_par_diff = models.FloatField(null=True, blank=True)
     eq_opp_diff = models.FloatField(null=True, blank=True)
     theil_ind = models.FloatField(null=True, blank=True)
-    
+
     class Meta:
-        indexes = [models.Index(fields=['session', 'epsilon'])] # Index for faster lookups
+        unique_together = ('session', 'with_dp')
+        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp'])]
 
 # Privacy Evaluation Result (One-to-One with Session)
 class PrivacyEvaluationResult(models.Model):
-    session = models.OneToOneField(Session, on_delete=models.CASCADE)
-    epsilon = models.FloatField()
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
+    epsilon = models.FloatField()
     privacy_risk_g0_minus = models.FloatField(null=True, blank=True)
     privacy_risk_g0_plus = models.FloatField(null=True, blank=True)
     privacy_risk_g1_minus = models.FloatField(null=True, blank=True)
     privacy_risk_g1_plus = models.FloatField(null=True, blank=True)
-    
+
     class Meta:
-        indexes = [models.Index(fields=['session', 'epsilon'])]
+        unique_together = ('session', 'with_dp')
+        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp'])]
 
 # Accuracy Results (One-to-One with Session)
 class AccuracyResult(models.Model):
-    session = models.OneToOneField(Session, on_delete=models.CASCADE)
+    session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    with_dp = models.BooleanField()
     epsilon = models.FloatField()
     mitigator = models.CharField(max_length=255)
     total_train_acc = models.FloatField(null=True, blank=True)
@@ -86,9 +89,10 @@ class AccuracyResult(models.Model):
     test_acc_g0_plus = models.FloatField(null=True, blank=True)
     test_acc_g1_minus = models.FloatField(null=True, blank=True)
     test_acc_g1_plus = models.FloatField(null=True, blank=True)
-    
+
     class Meta:
-        indexes = [models.Index(fields=['session', 'epsilon'])]
+        unique_together = ('session', 'with_dp')
+        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp'])]
 
 # Report History
 class ReportHistory(models.Model):

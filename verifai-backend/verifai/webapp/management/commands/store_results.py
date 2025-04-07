@@ -4,11 +4,22 @@ from django.conf import settings
 import os
 import pickle
 import pandas as pd
+import math
 from aif360.datasets import StandardDataset
 from ml_modules.model_loader import load_model
 from ml_modules.training import train_orig, train_dir, train_rew, train_syn, train_syn_target
 
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
+# Helpers
+def safe_get(d, key, default=0.0):
+    try:
+        val = d.get(key, default)
+        if pd.isna(val) or val is None or (isinstance(val, float) and math.isnan(val)):
+            return default
+        return val
+    except Exception:
+        return default
 
 class Command(BaseCommand):
     help = 'Run training and store evaluation results into database.'
@@ -18,12 +29,10 @@ class Command(BaseCommand):
         dataset = UploadedDataset.objects.get(session=session)
         model = UploadedModel.objects.get(session=session)
 
-        # Load CSV dataset
         df = pd.read_csv(os.path.join(settings.MEDIA_ROOT, dataset.file.name))
         label_col = dataset.label_name
         protected_col = dataset.pa_name
 
-        # Prepare AIF360 dataset
         aif_dataset = StandardDataset(
             df,
             label_name=label_col,
@@ -36,25 +45,11 @@ class Command(BaseCommand):
         y = aif_dataset.labels.ravel()
         prot_attr_idx = aif_dataset.feature_names.index(protected_col)
 
-        # Load models
         model_path = os.path.join(settings.MEDIA_ROOT, model.file.name)
         num_features = X.shape[1]
         orig_model, original_model, dp_model = load_model(model_path, session.epsilon, num_features)
 
-        shadow_model_builder = lambda: original_model
-        target_model_builder = lambda: dp_model
-
-        # Pick training function based on mitigator
         mitigator = session.mitigators
-        if mitigator == "Reweighing":
-            results = train_rew(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
-        elif mitigator == "DIR":
-            results = train_dir(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
-        elif mitigator == "Synthetic" or mitigator == "Sampling":
-            results = train_syn(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
-        else:
-            results = train_orig(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
-
         subgroup_map = {
             "Unprivileged Unfavorable": "g0-",
             "Privileged Unfavorable": "g1-",
@@ -62,57 +57,70 @@ class Command(BaseCommand):
             "Privileged Favorable": "g1+",
         }
 
-        subgroup_acc_test = {subgroup_map[k]: v for k, v in results['subpop_test'][-1].items() if k in subgroup_map}
-        subgroup_acc_train = {subgroup_map[k]: v for k, v in results['subpop_train'][-1].items() if k in subgroup_map}
+        for with_dp_flag in [False, True]:
+            target_model = dp_model if with_dp_flag else original_model
+            shadow_model_builder = lambda: original_model
+            target_model_builder = lambda: target_model
 
-        # Save Accuracy Result
-        AccuracyResult.objects.update_or_create(
-            session=session,
-            defaults={
-                'epsilon': session.epsilon,
-                'mitigator': mitigator,
-                'total_train_acc': results['train_accuracies'][-1],
-                'total_test_acc': results['test_accuracies'][-1],
-                'train_acc_g0_minus': subgroup_acc_train.get("g0-"),
-                'train_acc_g0_plus': subgroup_acc_train.get("g0+"),
-                'train_acc_g1_minus': subgroup_acc_train.get("g1-"),
-                'train_acc_g1_plus': subgroup_acc_train.get("g1+"),
-                'test_acc_g0_minus': subgroup_acc_test.get("g0-"),
-                'test_acc_g0_plus': subgroup_acc_test.get("g0+"),
-                'test_acc_g1_minus': subgroup_acc_test.get("g1-"),
-                'test_acc_g1_plus': subgroup_acc_test.get("g1+"),
-            }
-        )
+            if mitigator == "Reweighing":
+                results = train_rew(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
+            elif mitigator == "DIR":
+                results = train_dir(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
+            elif mitigator in ["Synthetic", "Sampling"]:
+                results = train_syn(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
+            else:
+                results = train_orig(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
 
-        # Save Privacy Result
-        subgroup_privacy = results['subgroup_means']
-        PrivacyEvaluationResult.objects.update_or_create(
-            session=session,
-            defaults={
-                'epsilon': session.epsilon,
-                'with_dp': True,
-                'privacy_risk_g0_minus': subgroup_privacy.get("Unprivileged Unfavorable"),
-                'privacy_risk_g0_plus': subgroup_privacy.get("Unprivileged Favorable"),
-                'privacy_risk_g1_minus': subgroup_privacy.get("Privileged Unfavorable"),
-                'privacy_risk_g1_plus': subgroup_privacy.get("Privileged Favorable"),
-            }
-        )
+            subgroup_acc_test = {subgroup_map[k]: v for k, v in results['subpop_test'][-1].items() if k in subgroup_map}
+            subgroup_acc_train = {subgroup_map[k]: v for k, v in results['subpop_train'][-1].items() if k in subgroup_map}
+            subgroup_privacy = results.get('subgroup_means', {})
+            metrics = results['all_metrics'][-1] if results['all_metrics'] else {}
 
-        # Save Fairness Result
-        metrics = results['all_metrics'][-1] if results['all_metrics'] else {}
-        FairnessEvaluationResult.objects.update_or_create(
-            session=session,
-            defaults={
-                'epsilon': session.epsilon,
-                'with_dp': True,
-                'mitigator': mitigator,
-                'bal_acc': metrics.get("bal_acc"),
-                'avg_odds_diff': metrics.get("avg_odds_diff"),
-                'disp_imp': metrics.get("disp_imp"),
-                'stat_par_diff': metrics.get("stat_par_diff"),
-                'eq_opp_diff': metrics.get("eq_opp_diff"),
-                'theil_ind': metrics.get("theil_ind"),
-            }
-        )
+            AccuracyResult.objects.update_or_create(
+                session=session,
+                with_dp=with_dp_flag,
+                defaults={
+                    'epsilon': session.epsilon,
+                    'with_dp': with_dp_flag,
+                    'mitigator': mitigator,
+                    'total_train_acc': safe_get(results, 'train_accuracies'),
+                    'total_test_acc': safe_get(results, 'test_accuracies'),
+                    'train_acc_g0_minus': safe_get(subgroup_acc_train, "g0-"),
+                    'train_acc_g0_plus': safe_get(subgroup_acc_train, "g0+"),
+                    'train_acc_g1_minus': safe_get(subgroup_acc_train, "g1-"),
+                    'train_acc_g1_plus': safe_get(subgroup_acc_train, "g1+"),
+                    'test_acc_g0_minus': safe_get(subgroup_acc_test, "g0-"),
+                    'test_acc_g0_plus': safe_get(subgroup_acc_test, "g0+"),
+                    'test_acc_g1_minus': safe_get(subgroup_acc_test, "g1-"),
+                    'test_acc_g1_plus': safe_get(subgroup_acc_test, "g1+"),
+                }
+            )
+            
+            FairnessEvaluationResult.objects.update_or_create(
+                session=session,
+                defaults={
+                    'epsilon': session.epsilon,
+                    'with_dp': with_dp_flag,
+                    'mitigator': mitigator,
+                    'bal_acc': safe_get(metrics, "balanced_accuracy"),
+                    'avg_odds_diff': safe_get(metrics, "average_odds_difference"),
+                    'disp_imp': safe_get(metrics, "disparate_impact"),
+                    'stat_par_diff': safe_get(metrics, "statistical_parity_difference"),
+                    'eq_opp_diff': safe_get(metrics, "equal_opportunity_difference"),
+                    'theil_ind': safe_get(metrics, "theil_index"),
+                }
+            )
+
+            PrivacyEvaluationResult.objects.update_or_create(
+                session=session,
+                defaults={
+                    'epsilon': session.epsilon,
+                    'with_dp': with_dp_flag,
+                    'privacy_risk_g0_minus': safe_get(subgroup_privacy, "Unprivileged Unfavorable"),
+                    'privacy_risk_g0_plus': safe_get(subgroup_privacy, "Unprivileged Favorable"),
+                    'privacy_risk_g1_minus': safe_get(subgroup_privacy, "Privileged Unfavorable"),
+                    'privacy_risk_g1_plus': safe_get(subgroup_privacy, "Privileged Favorable"),
+                }
+            )
 
         self.stdout.write(self.style.SUCCESS("✅ Results stored successfully!"))

@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from metrics import average_dicts
+from .metrics import average_dicts
 
 def save_summary_tables(dataset_name, model_name,
                         accuracies_train_dict, accuracies_test_dict,
