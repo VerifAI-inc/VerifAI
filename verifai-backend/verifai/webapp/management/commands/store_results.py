@@ -98,6 +98,7 @@ class Command(BaseCommand):
             
             FairnessEvaluationResult.objects.update_or_create(
                 session=session,
+                with_dp=with_dp_flag,
                 defaults={
                     'epsilon': session.epsilon,
                     'with_dp': with_dp_flag,
@@ -113,6 +114,7 @@ class Command(BaseCommand):
 
             PrivacyEvaluationResult.objects.update_or_create(
                 session=session,
+                with_dp=with_dp_flag,
                 defaults={
                     'epsilon': session.epsilon,
                     'with_dp': with_dp_flag,
