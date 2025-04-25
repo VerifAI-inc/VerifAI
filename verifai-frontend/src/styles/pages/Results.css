@@ -37,24 +37,32 @@
 }
 
 /* Graphs Section */
-.graphs-container {
-    display: flex;
-    justify-content: space-between;
+.results-graphs-wrapper {
     width: 100%;
-    gap: 20px;
-    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
 }
 
-.graphs-container img {
-    width: 90%;
+.graphs-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
 }
 
 .graph-card {
-    width: 48%;
+    width: 500px;
     background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+.graphs-container img {
+    width: 90%;
 }
 
 /* Buttons for Tables & Reports */
