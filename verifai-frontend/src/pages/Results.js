@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Slider from "../components/Slider";
 import { FaDownload, FaArrowLeft } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import "../styles/Global.css";
 import "../styles/pages/Results.css";
-import { Link } from "react-router-dom";
 
 const Results = () => {
   const [epsilon, setEpsilon] = useState(1.0);
   const [results, setResults] = useState(null);
-  const [loading, setLoading] = useState(true); // ✅ loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/store-results/")
@@ -24,12 +25,30 @@ const Results = () => {
         console.error("❌ Error fetching results:", error);
       })
       .finally(() => {
-        setLoading(false); // ✅ hide spinner
+        setLoading(false);
       });
   }, []);
 
   const handleSliderChange = (event) => {
     setEpsilon(event.target.value);
+  };
+
+  const getGraphData = () => {
+    if (!results || !results.privacy) return [];
+
+    const subpopLabels = {
+      "g0-": "Unprivileged Unfavorable",
+      "g0+": "Unprivileged Favorable",
+      "g1-": "Privileged Unfavorable",
+      "g1+": "Privileged Favorable",
+    };
+
+    return Object.entries(subpopLabels).map(([key, label]) => ({
+      subpopulation: label,
+      Orig: results.privacy[key],
+      // If you later add mitigator values, you can extend here
+      // Mitigator: results.mitigator_privacy?.[key] || null,
+    }));
   };
 
   return (
@@ -64,25 +83,20 @@ const Results = () => {
       ) : (
         <div className="graphs-container">
           <div className="graph-card">
-            <h2>Without DP</h2>
-            <div className="results-data">
-              <p>Test Accuracy: {results.accuracy.without_dp.test}</p>
-              <p>Train Accuracy: {results.accuracy.without_dp.train}</p>
-              {Object.entries(results.accuracy.without_dp.subgroups).map(([key, val]) => (
-                <p key={key}>{key} Subgroup Accuracy: {val}</p>
-              ))}
-            </div>
-          </div>
-
-          <div className="graph-card">
-            <h2>With DP</h2>
-            <div className="results-data">
-              <p>Test Accuracy: {results.accuracy.with_dp.test}</p>
-              <p>Train Accuracy: {results.accuracy.with_dp.train}</p>
-              {Object.entries(results.accuracy.with_dp.subgroups).map(([key, val]) => (
-                <p key={key}>{key} Subgroup Accuracy: {val}</p>
-              ))}
-            </div>
+            <h2>Privacy Risk Across Subpopulations</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={getGraphData()}
+                margin={{ top: 30, right: 30, left: 20, bottom: 50 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="subpopulation" angle={-15} textAnchor="end" interval={0} height={80} />
+                <YAxis domain={[0, 1]} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Orig" fill="#8884d8" barSize={40} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
       )}

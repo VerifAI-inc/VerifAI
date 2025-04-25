@@ -42,7 +42,7 @@ class UploadedDataset(models.Model):
     file = models.FileField(upload_to="datasets/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-# Fairness Evaluation Result (One-to-One with Session)
+# Fairness Evaluation Result (Updated Meta)
 class FairnessEvaluationResult(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
@@ -56,24 +56,29 @@ class FairnessEvaluationResult(models.Model):
     theil_ind = models.FloatField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('session', 'with_dp')
-        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp'])]
+        constraints = [
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator'], name='unique_fairness_session_withdp_mitigator')
+        ]
+        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]
 
-# Privacy Evaluation Result (One-to-One with Session)
+# Privacy Evaluation Result (Updated Meta)
 class PrivacyEvaluationResult(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
     epsilon = models.FloatField()
+    mitigator = models.CharField(max_length=255)
     privacy_risk_g0_minus = models.FloatField(null=True, blank=True)
     privacy_risk_g0_plus = models.FloatField(null=True, blank=True)
     privacy_risk_g1_minus = models.FloatField(null=True, blank=True)
     privacy_risk_g1_plus = models.FloatField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('session', 'with_dp')
-        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp'])]
+        constraints = [
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator'], name='unique_privacy_session_withdp_mitigator')
+        ]
+        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]
 
-# Accuracy Results (One-to-One with Session)
+# Accuracy Results (Updated Meta)
 class AccuracyResult(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
@@ -91,8 +96,10 @@ class AccuracyResult(models.Model):
     test_acc_g1_plus = models.FloatField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('session', 'with_dp')
-        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp'])]
+        constraints = [
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator'], name='unique_accuracy_session_withdp_mitigator')
+        ]
+        indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]
 
 # Report History
 class ReportHistory(models.Model):
