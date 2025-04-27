@@ -14,7 +14,6 @@ const Upload = () => {
   const [uploadResult, setUploadResult] = useState(null);
   const [previewInfo, setPreviewInfo] = useState(null);
 
-  localStorage.setItem('token', '');
   const getAuthToken = () => localStorage.getItem('token');
 
   const handleFileChange = (e, setFile) => {
