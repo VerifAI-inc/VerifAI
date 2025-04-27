@@ -14,11 +14,13 @@ const Upload = () => {
   const [uploadResult, setUploadResult] = useState(null);
   const [previewInfo, setPreviewInfo] = useState(null);
 
-  const getAuthToken = () => localStorage.getItem('token');
-
   const handleFileChange = (e, setFile) => {
     setFile(e.target.files[0]);
   };
+
+  const getAuthHeader = () => ({
+    "Authorization": `Bearer ${localStorage.getItem('token')}`,
+  });
 
   const handleModelFileChange = async (e) => {
     const file = e.target.files[0];
@@ -30,12 +32,9 @@ const Upload = () => {
     formData.append("num_features", "10");
 
     try {
-      const token = getAuthToken();
       const response = await fetch("http://127.0.0.1:8000/api/preview-model/", {
         method: "POST",
-        headers: {
-          "Authorization": `Token ${token}`,
-        },
+        headers: getAuthHeader(),
         body: formData,
       });
       const data = await response.json();
@@ -61,28 +60,26 @@ const Upload = () => {
     formData.append("favorableLabel", uploadFavorableLabel);
     formData.append("protectedAttribute", uploadProtectedAttribute);
     formData.append("privilegedAttribute", uploadPrivilegedAttribute);
-    setUploadDpModel("");formData.append("dpModel", uploadDpModel);
+    setUploadDpModel("");  // (this line should be before, ideally when setting state)
+    formData.append("dpModel", uploadDpModel);
     formData.append("epsilon", "1.0");
-
+  
     uploadMitigators.forEach((mitigator) => formData.append("mitigators", mitigator));
-
+  
     try {
-      const token = getAuthToken();
       const response = await fetch("http://127.0.0.1:8000/api/upload/", {
         method: "POST",
-        headers: {
-          "Authorization": `Token ${token}`,
-        },
+        headers: getAuthHeader(),
         body: formData,
       });
-
       const data = await response.json();
-      console.log("Response from server:", data);
-      setUploadResult(data);
+      console.log("Upload response:", data);
+      setUploadResult(data);  // ✅ update `uploadResult`, not `previewInfo`
     } catch (error) {
       console.error("Error during file upload:", error);
     }
   };
+  
 
   return (
     <div className="upload-container">
