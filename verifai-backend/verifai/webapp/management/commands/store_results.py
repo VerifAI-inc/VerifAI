@@ -1,3 +1,4 @@
+# webapp/management/commands/store_results.py
 from django.core.management.base import BaseCommand
 from webapp.models import UploadedModel, UploadedDataset, Session, FairnessEvaluationResult, PrivacyEvaluationResult, AccuracyResult
 from django.conf import settings
@@ -13,8 +14,17 @@ os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 class Command(BaseCommand):
     help = 'Run training and store evaluation results into database.'
 
-    def handle(self, *args, **kwargs):
-        session = Session.objects.last()
+    def add_arguments(self, parser):
+        parser.add_argument('--session_id', type=int, required=True)
+
+    def handle(self, *args, **options):
+        session_id = options['session_id']
+        try:
+            session = Session.objects.get(id=session_id)
+        except Session.DoesNotExist:
+            self.stderr.write(self.style.ERROR(f"❌ Session with id {session_id} does not exist."))
+            return
+
         dataset = UploadedDataset.objects.get(session=session)
         model = UploadedModel.objects.get(session=session)
 
@@ -50,7 +60,7 @@ class Command(BaseCommand):
             results = train_rew(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
         elif mitigator == "DIR":
             results = train_dir(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
-        elif mitigator == "Synthetic" or mitigator == "Sampling":
+        elif mitigator in ["Synthetic", "Sampling"]:
             results = train_syn(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
         else:
             results = train_orig(X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb, shadow_model_builder, target_model_builder)
@@ -115,4 +125,4 @@ class Command(BaseCommand):
             }
         )
 
-        self.stdout.write(self.style.SUCCESS("✅ Results stored successfully!"))
+        self.stdout.write(self.style.SUCCESS(f"✅ Results stored successfully for session {session_id}!"))

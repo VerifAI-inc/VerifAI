@@ -1,3 +1,7 @@
+celery
+redis
+immutabledict
+
 # Core Python and System Utilities
 absl-py==1.4.0
 alembic==1.13.3

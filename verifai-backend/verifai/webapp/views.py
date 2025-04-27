@@ -13,7 +13,7 @@ from django.conf import settings
 from django.http import JsonResponse
 from .models import Session, AccuracyResult, PrivacyEvaluationResult, FairnessEvaluationResult
 from django.core.management import call_command
-
+from .tasks import train_model_task
 
 class ReportHistoryList(ListAPIView):
     queryset = ReportHistory.objects.all().order_by('-creation_date')
@@ -31,14 +31,18 @@ class UploadAPIView(APIView):
         serializer = UploadSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             session = serializer.save()
+            
+            # 🧠 Trigger background training after upload
+            train_model_task.delay(session.id)
+
             return Response(
                 {
-                    "message": "Files uploaded and session created successfully.",
+                    "message": "Files uploaded and session created successfully. Training started in background.",
                     "session_id": session.id
                 },
                 status=status.HTTP_201_CREATED
             )
-        print("Validation Errors:", serializer.errors)  # Print errors in Django logs
+        print("Validation Errors:", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

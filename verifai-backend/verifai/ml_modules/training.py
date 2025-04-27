@@ -5,11 +5,12 @@ from .metrics import get_stat_and_loss_tabular, calculate_subpopulation_accuraci
 from tensorflow_privacy.privacy.privacy_tests.membership_inference_attack import advanced_mia as amia, membership_inference_attack as mia
 from tensorflow_privacy.privacy.privacy_tests.membership_inference_attack.data_structures import AttackInputData
 from .oversampling import synthetic
-from fairlearn.reductions import EqualizedOdds
+# from fairlearn.reductions import EqualizedOdds
 
 # Fairness-related Pre-/In-processing
 from aif360.algorithms.preprocessing import DisparateImpactRemover, LFR, OptimPreproc, Reweighing
 from fairlearn.reductions import EqualizedOdds, ExponentiatedGradient
+from fairlearn.reductions import ExponentiatedGradient
 from aif360.sklearn.inprocessing import ExponentiatedGradientReduction
 from aif360.metrics import utils, BinaryLabelDatasetMetric
 
@@ -688,10 +689,10 @@ def train_eg(dataframe, dataset_binary, protected_attribute_index, privileged_at
             X_val, y_val = X.iloc[~indices], y[~indices]
             if i == target_idx:
                 _model = target_model_builder()
-                constraint = EqualizedOdds(difference_bound=0.001)
+                # constraint = EqualizedOdds(difference_bound=0.001)
                 model = ExponentiatedGradientReduction(prot_attr=protected_attribute_name,
-                                                       estimator=_model,
-                                                       constraints=constraint)
+                                        estimator=_model,
+                                        constraints=EqualizedOdds)
                 model.classes_ = np.unique(y)
                 model.model_ = model.estimator
             else:

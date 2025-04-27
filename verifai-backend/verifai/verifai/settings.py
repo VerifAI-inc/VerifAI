@@ -178,3 +178,11 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'info.verifai@gmail.com'
 EMAIL_HOST_PASSWORD = 'pggd riei xgmi rlfv'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+
+# Celery settings
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
