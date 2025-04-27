@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import ReportHistoryList
-# from .views import ProfileView
+from .views import ReportHistoryList, UploadAPIView, PreviewModelAPIView
 from . import views
 
 urlpatterns = [
-    path('api/reports/', ReportHistoryList.as_view(), name='report-history-list'),
-    # path('', ProfileView.as_view(), name='profile'),  # <-- Add this line to load profile at root
+    path('reports/', ReportHistoryList.as_view(), name='report-history-list'),
+    path('upload/', UploadAPIView.as_view(), name='upload-api'),
+    path('preview-model/', PreviewModelAPIView.as_view(), name='preview-model'),
     path('store-results/', views.store_results, name='store_results'),
 ]
