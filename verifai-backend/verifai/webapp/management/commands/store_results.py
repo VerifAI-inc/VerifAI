@@ -60,68 +60,89 @@ class Command(BaseCommand):
                 "Privileged Favorable": "g1+",
             }
 
+            # Step 1: Train WITHOUT DP only ONCE
+            logger.info(f"⚡ Running evaluations for without-DP...")
+            orig_model, original_model, dp_model = load_model(model_path, epsilon=0.0, num_features=num_features)
+
+            shadow_model_builder = lambda: original_model
+            target_model_builder = lambda: original_model
+
+            # Original model (no mitigation)
+            orig_results = train_orig(
+                X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
+                shadow_model_builder, target_model_builder
+            )
+            self.save_results(session, orig_results, with_dp_flag=False, mitigator="Orig", subgroup_map=subgroup_map, epsilon=0.0)
+            logger.info(f"✅ Stored original model results WITHOUT DP.")
+
+            # Mitigator model (user-selected)
+            mitigator = session.mitigators
+            if mitigator == "Reweighing":
+                trainer = train_rew
+            elif mitigator == "DIR":
+                trainer = train_dir
+            elif mitigator in ["Synthetic", "Sampling"]:
+                trainer = train_syn
+            else:
+                trainer = train_orig
+
+            mitigator_results = trainer(
+                X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
+                shadow_model_builder, target_model_builder
+            )
+            self.save_results(session, mitigator_results, with_dp_flag=False, mitigator=mitigator, subgroup_map=subgroup_map, epsilon=0.0)
+            logger.info(f"✅ Stored mitigator ({mitigator}) results WITHOUT DP.")
+
+            # Step 2: Train WITH DP for each epsilon
             epsilon_list = [0.1, 1, 5, 10]
 
             for epsilon in epsilon_list:
-                logger.info(f"⚡ Running evaluations for ε={epsilon}...")
+                logger.info(f"⚡ Running evaluations for WITH-DP ε={epsilon}...")
+                _, original_model, dp_model = load_model(model_path, epsilon, num_features)
 
-                orig_model, original_model, dp_model = load_model(model_path, epsilon, num_features)
+                shadow_model_builder = lambda: original_model
+                target_model_builder = lambda: dp_model
 
-                # Step 1: Original model
-                for with_dp_flag in [False, True]:
-                    target_model = dp_model if with_dp_flag else original_model
-                    shadow_model_builder = lambda: original_model
-                    target_model_builder = lambda: target_model
+                # Original model (no mitigation)
+                orig_results = train_orig(
+                    X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
+                    shadow_model_builder, target_model_builder
+                )
+                self.save_results(session, orig_results, with_dp_flag=True, mitigator="Orig", subgroup_map=subgroup_map, epsilon=epsilon)
+                logger.info(f"✅ Stored original model results WITH DP ε={epsilon}.")
 
-                    orig_results = train_orig(
-                        X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
-                        shadow_model_builder, target_model_builder
-                    )
+                # Mitigator model
+                mitigator_results = trainer(
+                    X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
+                    shadow_model_builder, target_model_builder
+                )
+                self.save_results(session, mitigator_results, with_dp_flag=True, mitigator=mitigator, subgroup_map=subgroup_map, epsilon=epsilon)
+                logger.info(f"✅ Stored mitigator ({mitigator}) results WITH DP ε={epsilon}.")
 
-                    self.save_results(session, orig_results, with_dp_flag, mitigator="Orig", subgroup_map=subgroup_map, epsilon=epsilon)
-                    logger.info(f"✅ Stored original model results for ε={epsilon}, with_dp={with_dp_flag}")
-
-                # Step 2: Mitigator model
-                mitigator = session.mitigators
-                if mitigator == "Reweighing":
-                    trainer = train_rew
-                elif mitigator == "DIR":
-                    trainer = train_dir
-                elif mitigator in ["Synthetic", "Sampling"]:
-                    trainer = train_syn
-                else:
-                    trainer = train_orig
-
-                for with_dp_flag in [False, True]:
-                    target_model = dp_model if with_dp_flag else original_model
-                    shadow_model_builder = lambda: original_model
-                    target_model_builder = lambda: target_model
-
-                    results = trainer(
-                        X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
-                        shadow_model_builder, target_model_builder
-                    )
-
-                    self.save_results(session, results, with_dp_flag, mitigator=mitigator, subgroup_map=subgroup_map, epsilon=epsilon)
-                    logger.info(f"✅ Stored mitigator ({mitigator}) results for ε={epsilon}, with_dp={with_dp_flag}")
-
-            logger.success("✅ All results stored successfully!")
+            logger.info("✅ All results stored successfully!")
 
         except Exception as e:
             logger.error(f"❌ An error occurred in store_results: {str(e)}")
             raise e
 
     def save_results(self, session, results, with_dp_flag, mitigator, subgroup_map, epsilon):
-
         subgroup_acc_test = {subgroup_map[k]: v for k, v in results['subpop_test'][-1].items() if k in subgroup_map}
         subgroup_acc_train = {subgroup_map[k]: v for k, v in results['subpop_train'][-1].items() if k in subgroup_map}
         subgroup_privacy = results.get('subgroup_means', {})
         metrics = results['all_metrics'][-1] if results['all_metrics'] else {}
 
+        # 📌 Build the lookup
+        lookup = {
+            'session': session,
+            'with_dp': with_dp_flag,
+            'mitigator': mitigator,
+        }
+        if with_dp_flag:
+            lookup['epsilon'] = epsilon  # only add epsilon for DP models
+
+        # 📌 Save AccuracyResult
         AccuracyResult.objects.update_or_create(
-            session=session,
-            with_dp=with_dp_flag,
-            mitigator=mitigator,
+            **lookup,
             defaults={
                 'epsilon': epsilon,
                 'with_dp': with_dp_flag,
@@ -139,10 +160,9 @@ class Command(BaseCommand):
             }
         )
 
+        # 📌 Save FairnessEvaluationResult
         FairnessEvaluationResult.objects.update_or_create(
-            session=session,
-            with_dp=with_dp_flag,
-            mitigator=mitigator,
+            **lookup,
             defaults={
                 'epsilon': epsilon,
                 'with_dp': with_dp_flag,
@@ -156,10 +176,9 @@ class Command(BaseCommand):
             }
         )
 
+        # 📌 Save PrivacyEvaluationResult
         PrivacyEvaluationResult.objects.update_or_create(
-            session=session,
-            with_dp=with_dp_flag,
-            mitigator=mitigator,
+            **lookup,
             defaults={
                 'epsilon': epsilon,
                 'with_dp': with_dp_flag,
@@ -170,3 +189,5 @@ class Command(BaseCommand):
                 'privacy_risk_g1_plus': safe_get(subgroup_privacy, "Privileged Favorable"),
             }
         )
+        
+        
