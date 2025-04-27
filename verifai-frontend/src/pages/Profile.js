@@ -28,7 +28,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/user/profile/", {
+      .get("http://127.0.0.1:8000/api/auth/user/profile/", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -156,7 +156,7 @@ const Profile = () => {
                     onClick={() => {
                       axios
                         .put(
-                          "http://127.0.0.1:8000/api/user/profile/",
+                          "http://127.0.0.1:8000/api/auth/user/profile/",
                           editForm,
                           {
                             headers: {
