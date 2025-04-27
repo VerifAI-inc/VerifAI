@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
+
+.reports-header {
+    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 200px;
+    text-align: center;
+    padding-top: 120px;
+    color: white;
+    position: relative;
+}
+
+.reports-page {
+    margin-bottom: -80px;
+}
+
+.reports-header h2 {
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 5px;
+    text-transform: uppercase;
+}
+
+.page-tab-reports {
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.page-tab-reports a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.page-tab-reports i {
+    margin: 0 10px;
+}
+
+.reports-section {
+    background: white;
+    padding: 60px 15%;
+    text-align: center;
+}
+
+.reports-title {
+    font-size: 2.2rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #1b3b6f;
+}
+
+.reports-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 25px;
+}
+
+.reports-button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.reports-generate-btn, .reports-download-btn, .reports-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    padding: 12px 20px;
+    border: none;
+}
+
+.reports-generate-btn {
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.reports-generate-btn:hover {
+    background: linear-gradient(to right, #0056b3, #004085);
+    transform: scale(1.05);
+}
+
+.reports-download-btn {
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    color: white;
+    box-shadow: 0 5px 15px linear-gradient(to right, #4a90e2, #0056b3);
+}
+
+.reports-download-btn:hover {
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    transform: scale(1.05);
+}
+
+.reports-back-btn {
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    color: white;
+    box-shadow: 0 5px 15px linear-gradient(to right, #4a90e2, #0056b3);
+}
+
+.reports-back-btn:hover {
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    transform: scale(1.05);
+}
+
+.report-content {
+    margin-top: 40px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fafafa;
+    text-align: left;
+    font-size: 1.2rem;
+    color: #444;
+    text-align: center;
+    min-height: 30px;
+}
+
+.generated-report {
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.report-placeholder {
+    font-size: 1.2rem;
+    color: #777;
+    font-style: italic;
+}
+
+@media (max-width: 1024px) {
+    .reports-section {
+        padding: 60px 10%;
+    }
+}
+
+@media (max-width: 768px) {
+    .reports-section {
+        padding: 50px 5%;
+    }
+
+    .reports-title {
+        font-size: 2rem;
+    }
+
+    .reports-description {
+        font-size: 1.1rem;
+    }
+
+    .reports-back-btn {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .reports-generate-btn, .reports-download-btn, .reports-back-btn {
+        width: 100%;
+        max-width: 250px;
+    }
+}

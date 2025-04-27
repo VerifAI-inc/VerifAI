@@ -1,0 +1,275 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+.home-container {
+    background-color: #fff;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: -80px;
+}
+
+.page-title-home {
+    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 200px;
+    text-align: center;
+    padding-top: 150px;
+    color: white;
+    position: relative;
+}
+
+.page-title-home h2 {
+    font-size: 36px;
+    margin-top: -25px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.page-tab-home {
+    font-size: 16px;
+    margin-top: 15px;
+}
+
+.page-tab-home a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.page-tab-home i {
+    margin: 0 10px;
+}
+
+.about-main-home {
+    background-color: white;
+    padding: 50px 0;
+}
+
+.container-home {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+.row-home {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.col-6-home {
+    width: 48%;
+}
+
+.about-main-left-home, .about-main-right-home,
+.about-main-left2-home, .about-main-right2-home {
+    padding: 20px;
+    text-align: left;
+}
+
+.about-main-left-home h2, .about-main-right2-home h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #1b3b6f;
+}
+
+.about-main-left-home p, .about-main-right2-home p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #444;
+}
+
+.about-main-left2-home, .about-main-right-home {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-image-home {
+    width: 95%;
+    border-radius: 10px;
+}
+
+.page-title-team {
+    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center fixed;
+    background-size: cover;
+    height: 200px;
+    text-align: center;
+    padding-top: 150px;
+    color: white;
+    position: relative;
+}
+
+.page-title-team h2 {
+    font-size: 36px;
+    font-weight: bold;
+    font-size: 36px;
+    margin-top: -25px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.our-team-home {
+    background-color: #f4f4f4;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.our-team-home h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #1b3b6f;
+}
+
+.row-home {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap; 
+    gap: 25px;
+}
+
+.team-box-home {
+    background: white;
+    width: 24%; 
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+}
+
+.team-box-home:hover {
+    transform: translateY(-5px);
+}
+
+.team-img-home img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.team-person-home p {
+    color: #6B0000;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.team-person-home span {
+    font-size: 14px;
+    color: #555;
+}
+
+.team-person-social-home {
+    margin-top: 15px;
+}
+
+.team-person-social-home a {
+    color: #6B0000;
+    margin: 0 10px;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+.team-person-social-home a:hover {
+    color: black;
+}
+
+.client-feedback-home {
+    background-color: #f9f9f9;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.client-feedback-home h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    color: #1b3b6f;
+}
+
+.feedback-box-home {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+.feedback-text-home {
+    font-size: 18px;
+    color: #444;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.feedback-name-home {
+    font-size: 20px;
+    font-weight: bold;
+    color: #6B0000;
+    margin-bottom: 5px;
+}
+
+.feedback-role-home {
+    font-size: 16px;
+    color: #555;
+}
+
+.home-slick-prev-custom, .home-slick-next-custom {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 30px;
+    font-weight: bold;
+    color: #1b3b6f;
+    background: none; 
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+.slick-dots {
+    display: none !important;
+}
+
+.home-slick-prev-custom {
+    margin-left: 50px;
+}
+
+.home-slick-next-custom {
+    margin-left: 1120px;
+}
+
+@media (max-width: 768px) {
+    .feedback-box-home {
+        width: 90%;
+    }
+
+    .home-slick-prev-custom {
+        left: -30px;
+    }
+
+    .home-slick-next-custom {
+        right: -30px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .row-home {
+        flex-wrap: wrap;
+    }
+    
+    .team-box-home {
+        width: 45%; 
+    }
+}
+
+@media (max-width: 768px) {
+    .team-box-home {
+        width: 100%; 
+    }
+}

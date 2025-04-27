@@ -1,0 +1,148 @@
+/* Background Wrapper */
+.upload-container {
+    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    width: 100%;
+    margin-bottom: -80px;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  /* Main white section (like Results & Contact) */
+  .upload-main {
+    background: white;
+    padding: 50px 80px;
+    margin-top: -50px;
+  }
+  
+  /* Page Title */
+  .upload-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #0088ff;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+  
+  /* Centered Rounded Card Wrapper (like Contact) */
+  .upload-card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Upload Card with Dark Background */
+  .upload-card {
+    width: 100%;
+    max-width: 1000px;
+    background: linear-gradient(to right, #1e1e2f, #2a2a3e);
+    backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.4s ease-in-out;
+  }
+  
+  /* Two Column Form Layout */
+  .upload-form-section {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .upload-form-column {
+    flex: 1;
+  }
+  
+  /* Form Elements */
+  .upload-form-group {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  
+  .upload-form-group label {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .upload-form-group input[type="text"],
+  .upload-form-group input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .upload-form-group input::placeholder {
+    color: rgba(220, 220, 220, 0.8);
+    opacity: 1;
+  }
+  
+  /* Mitigators */
+  .upload-mitigators-group {
+    margin-top: 10px;
+  }
+  
+  .upload-mitigators-container {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .upload-mitigator-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+  }
+  
+  /* Submit Button */
+  .upload-button {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #23395d, #1b3b6f);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+  }
+  
+  .upload-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(255, 65, 108, 0.5);
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .upload-form-section {
+      flex-direction: column;
+    }
+  
+    .upload-main {
+      padding: 30px 20px;
+    }
+  
+    .upload-card {
+      padding: 30px;
+    }
+  }
+  
