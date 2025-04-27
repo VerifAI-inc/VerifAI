@@ -1,3 +1,4 @@
+import logging
 from django.core.management.base import BaseCommand
 from webapp.models import UploadedModel, UploadedDataset, Session, FairnessEvaluationResult, PrivacyEvaluationResult, AccuracyResult
 from django.conf import settings
@@ -9,7 +10,8 @@ from aif360.datasets import StandardDataset
 from ml_modules.model_loader import load_model
 from ml_modules.training import train_orig, train_dir, train_rew, train_syn, train_syn_target
 
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+# Setup logger
+logger = logging.getLogger(__name__)
 
 # Helpers
 def safe_get(d, key, default=0.0):
@@ -25,78 +27,91 @@ class Command(BaseCommand):
     help = 'Run training and store evaluation results into database.'
 
     def handle(self, *args, **kwargs):
-        session = Session.objects.last()
-        dataset = UploadedDataset.objects.get(session=session)
-        model = UploadedModel.objects.get(session=session)
+        logger.info("Starting store_results command...")
 
-        df = pd.read_csv(os.path.join(settings.MEDIA_ROOT, dataset.file.name))
-        label_col = dataset.label_name
-        protected_col = dataset.pa_name
+        try:
+            session = Session.objects.last()
+            dataset = UploadedDataset.objects.get(session=session)
+            model = UploadedModel.objects.get(session=session)
 
-        aif_dataset = StandardDataset(
-            df,
-            label_name=label_col,
-            favorable_classes=[dataset.fav_label],
-            protected_attribute_names=[protected_col],
-            privileged_classes=[[dataset.priv_attb]]
-        )
+            df = pd.read_csv(os.path.join(settings.MEDIA_ROOT, dataset.file.name))
+            label_col = dataset.label_name
+            protected_col = dataset.pa_name
 
-        X = aif_dataset.features
-        y = aif_dataset.labels.ravel()
-        prot_attr_idx = aif_dataset.feature_names.index(protected_col)
-
-        model_path = os.path.join(settings.MEDIA_ROOT, model.file.name)
-        num_features = X.shape[1]
-        orig_model, original_model, dp_model = load_model(model_path, session.epsilon, num_features)
-
-        subgroup_map = {
-            "Unprivileged Unfavorable": "g0-",
-            "Privileged Unfavorable": "g1-",
-            "Unprivileged Favorable": "g0+",
-            "Privileged Favorable": "g1+",
-        }
-
-        #### STEP 1: Always run Orig model first (no mitigator)
-        for with_dp_flag in [False, True]:
-            target_model = dp_model if with_dp_flag else original_model
-            shadow_model_builder = lambda: original_model
-            target_model_builder = lambda: target_model
-
-            orig_results = train_orig(
-                X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
-                shadow_model_builder, target_model_builder
+            aif_dataset = StandardDataset(
+                df,
+                label_name=label_col,
+                favorable_classes=[dataset.fav_label],
+                protected_attribute_names=[protected_col],
+                privileged_classes=[[dataset.priv_attb]]
             )
 
-            self.save_results(session, orig_results, with_dp_flag, mitigator="Orig", subgroup_map=subgroup_map)
+            X = aif_dataset.features
+            y = aif_dataset.labels.ravel()
+            prot_attr_idx = aif_dataset.feature_names.index(protected_col)
 
-        #### STEP 2: Then run user-chosen mitigator
-        mitigator = session.mitigators
+            model_path = os.path.join(settings.MEDIA_ROOT, model.file.name)
+            num_features = X.shape[1]
 
-        if mitigator == "Reweighing":
-            trainer = train_rew
-        elif mitigator == "DIR":
-            trainer = train_dir
-        elif mitigator in ["Synthetic", "Sampling"]:
-            trainer = train_syn
-        else:
-            trainer = train_orig  # fallback
+            subgroup_map = {
+                "Unprivileged Unfavorable": "g0-",
+                "Privileged Unfavorable": "g1-",
+                "Unprivileged Favorable": "g0+",
+                "Privileged Favorable": "g1+",
+            }
 
-        for with_dp_flag in [False, True]:
-            target_model = dp_model if with_dp_flag else original_model
-            shadow_model_builder = lambda: original_model
-            target_model_builder = lambda: target_model
+            epsilon_list = [0.1, 1, 5, 10]
 
-            results = trainer(
-                X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
-                shadow_model_builder, target_model_builder
-            )
+            for epsilon in epsilon_list:
+                logger.info(f"⚡ Running evaluations for ε={epsilon}...")
 
-            self.save_results(session, results, with_dp_flag, mitigator=mitigator, subgroup_map=subgroup_map)
+                orig_model, original_model, dp_model = load_model(model_path, epsilon, num_features)
 
-        self.stdout.write(self.style.SUCCESS("✅ Results stored successfully!"))
+                # Step 1: Original model
+                for with_dp_flag in [False, True]:
+                    target_model = dp_model if with_dp_flag else original_model
+                    shadow_model_builder = lambda: original_model
+                    target_model_builder = lambda: target_model
 
-    def save_results(self, session, results, with_dp_flag, mitigator, subgroup_map):
-        from webapp.models import AccuracyResult, FairnessEvaluationResult, PrivacyEvaluationResult
+                    orig_results = train_orig(
+                        X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
+                        shadow_model_builder, target_model_builder
+                    )
+
+                    self.save_results(session, orig_results, with_dp_flag, mitigator="Orig", subgroup_map=subgroup_map, epsilon=epsilon)
+                    logger.info(f"✅ Stored original model results for ε={epsilon}, with_dp={with_dp_flag}")
+
+                # Step 2: Mitigator model
+                mitigator = session.mitigators
+                if mitigator == "Reweighing":
+                    trainer = train_rew
+                elif mitigator == "DIR":
+                    trainer = train_dir
+                elif mitigator in ["Synthetic", "Sampling"]:
+                    trainer = train_syn
+                else:
+                    trainer = train_orig
+
+                for with_dp_flag in [False, True]:
+                    target_model = dp_model if with_dp_flag else original_model
+                    shadow_model_builder = lambda: original_model
+                    target_model_builder = lambda: target_model
+
+                    results = trainer(
+                        X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
+                        shadow_model_builder, target_model_builder
+                    )
+
+                    self.save_results(session, results, with_dp_flag, mitigator=mitigator, subgroup_map=subgroup_map, epsilon=epsilon)
+                    logger.info(f"✅ Stored mitigator ({mitigator}) results for ε={epsilon}, with_dp={with_dp_flag}")
+
+            logger.success("✅ All results stored successfully!")
+
+        except Exception as e:
+            logger.error(f"❌ An error occurred in store_results: {str(e)}")
+            raise e
+
+    def save_results(self, session, results, with_dp_flag, mitigator, subgroup_map, epsilon):
 
         subgroup_acc_test = {subgroup_map[k]: v for k, v in results['subpop_test'][-1].items() if k in subgroup_map}
         subgroup_acc_train = {subgroup_map[k]: v for k, v in results['subpop_train'][-1].items() if k in subgroup_map}
@@ -108,7 +123,7 @@ class Command(BaseCommand):
             with_dp=with_dp_flag,
             mitigator=mitigator,
             defaults={
-                'epsilon': session.epsilon,
+                'epsilon': epsilon,
                 'with_dp': with_dp_flag,
                 'mitigator': mitigator,
                 'total_train_acc': safe_get(results, 'train_accuracies'),
@@ -129,7 +144,7 @@ class Command(BaseCommand):
             with_dp=with_dp_flag,
             mitigator=mitigator,
             defaults={
-                'epsilon': session.epsilon,
+                'epsilon': epsilon,
                 'with_dp': with_dp_flag,
                 'mitigator': mitigator,
                 'bal_acc': safe_get(metrics, "balanced_accuracy"),
@@ -146,7 +161,7 @@ class Command(BaseCommand):
             with_dp=with_dp_flag,
             mitigator=mitigator,
             defaults={
-                'epsilon': session.epsilon,
+                'epsilon': epsilon,
                 'with_dp': with_dp_flag,
                 'mitigator': mitigator,
                 'privacy_risk_g0_minus': safe_get(subgroup_privacy, "Unprivileged Unfavorable"),
