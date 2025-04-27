@@ -55,8 +55,8 @@ inFairness==0.2.3
 -e git+https://github.com/tensorflow/privacy.git@cdd16639a21adba5656798a953062367f5879d96#egg=tensorflow_privacy
 
 # Data Handling & Visualization
-altair==5.0.1
-bokeh==3.3.1
+# altair==5.0.1
+# bokeh==3.3.1
 holoviews==1.17.1
 hvplot==0.9.2
 matplotlib==3.8.3
@@ -64,11 +64,11 @@ plotly==5.17.0
 seaborn==0.12.2
 
 # API & Web Frameworks
-Flask==3.0.0
+# Flask==3.0.0
 graphene==3.4.3
 graphql-core==3.2.5
 graphviz==0.20.3
-pydeck==0.8.0
+# pydeck==0.8.0
 streamlit==1.35.0
 
 # Development, Testing, and Utilities
