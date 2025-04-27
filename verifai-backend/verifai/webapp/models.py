@@ -57,7 +57,7 @@ class FairnessEvaluationResult(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator', 'epsilon'], name='unique_accuracy_session_withdp_mitigator')
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator', 'epsilon'], name='unique_fairness_session_withdp_mitigator')
         ]
         
         indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]
@@ -75,7 +75,7 @@ class PrivacyEvaluationResult(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator', 'epsilon'], name='unique_accuracy_session_withdp_mitigator')
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator', 'epsilon'], name='unique_privacy_session_withdp_mitigator')
         ]
         
         indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]

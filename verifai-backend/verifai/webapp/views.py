@@ -4,7 +4,7 @@ from webapp.models import Session, FairnessEvaluationResult, PrivacyEvaluationRe
 def store_results(request):
     session = Session.objects.last()  # or select based on user if needed
 
-    epsilons = [0.1, 1, 5, 10]
+    epsilons = [0.0, 0.1, 1, 5, 10]  # ✅ INCLUDE 0.0!
 
     all_results = {}
 

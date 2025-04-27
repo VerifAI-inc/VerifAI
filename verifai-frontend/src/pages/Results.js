@@ -54,6 +54,11 @@ const Results = () => {
     return allResults[String(epsilon)] || null;
   };
 
+  const getWithoutDpResults = () => {
+    if (!allResults) return null;
+    return allResults["0.0"] || null;
+  };
+
   const subpopLabels = {
     "g0-": "UU",
     "g0+": "UF",
@@ -71,7 +76,7 @@ const Results = () => {
   };
 
   const getGraphData = (withDp) => {
-    const results = getCurrentResults();
+    const results = withDp ? getCurrentResults() : getWithoutDpResults();
     if (!results || !results.privacy) return [];
 
     const orig = withDp ? results.privacy?.orig_with_dp || {} : results.privacy?.orig_without_dp || {};
@@ -84,29 +89,8 @@ const Results = () => {
     }));
   };
 
-  const getMaxPrivacyRisk = () => {
-    const results = getCurrentResults();
-    if (!results || !results.privacy) return 1;
-
-    const values = [];
-    const fields = ["orig_without_dp", "mitigator_without_dp", "orig_with_dp", "mitigator_with_dp"];
-    const all_keys = ["g0-", "g0+", "g1-", "g1+"];
-
-    fields.forEach((field) => {
-      const data = results.privacy[field] || {};
-      all_keys.forEach((key) => {
-        if (data[key] !== undefined) {
-          values.push(data[key]);
-        }
-      });
-    });
-
-    if (values.length === 0) return 1;
-    return Math.ceil(Math.max(...values) * 20) / 20;
-  };
-
   const getFairnessGraphData = (withDp) => {
-    const results = getCurrentResults();
+    const results = withDp ? getCurrentResults() : getWithoutDpResults();
     if (!results || !results.fairness) return [];
 
     const entries = Object.entries(results.fairness);
@@ -129,49 +113,89 @@ const Results = () => {
     return Object.values(fairnessData);
   };
 
-  const renderGraphs = (withDp) => (
-    <div className="graph-card">
-      {/* Privacy Risk Graph */}
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={getGraphData(withDp)}
-          margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="subpopulation" angle={-20} textAnchor="end" interval={0} height={80} />
-          <YAxis domain={[0, getMaxPrivacyRisk()]} />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="Orig" fill="#8884d8" barSize={20} />
-          <Bar dataKey="Mitigator" fill="#82ca9d" barSize={20} />
-        </BarChart>
-      </ResponsiveContainer>
-      <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
-        Privacy Risk across Subpopulations
-      </p>
+  const getMaxPrivacyRisk = () => {
+    const results = getCurrentResults();
+    const withoutDpResults = getWithoutDpResults();
+    if (!results || !results.privacy || !withoutDpResults || !withoutDpResults.privacy) return 1;
 
-      <div style={{ marginTop: "30px" }}></div>
+    const values = [];
+    const fields = ["orig_without_dp", "mitigator_without_dp", "orig_with_dp", "mitigator_with_dp"];
+    const all_keys = ["g0-", "g0+", "g1-", "g1+"];
 
-      {/* Fairness Metrics Graph */}
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={getFairnessGraphData(withDp)}
-          margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="metric" angle={-20} textAnchor="end" interval={0} height={80} />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="Original" fill="#ffa07a" barSize={20} />
-          <Bar dataKey="Mitigator" fill="#0000FF" barSize={20} />
-        </BarChart>
-      </ResponsiveContainer>
-      <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
-        Fairness Metrics Comparison
-      </p>
-    </div>
-  );
+    fields.forEach((field) => {
+      const data = results.privacy[field] || withoutDpResults.privacy[field] || {};
+      all_keys.forEach((key) => {
+        if (data[key] !== undefined) {
+          values.push(data[key]);
+        }
+      });
+    });
+
+    if (values.length === 0) return 1;
+    return Math.ceil(Math.max(...values) * 20) / 20;
+  };
+
+  const renderGraphs = (withDp) => {
+    const results = withDp ? getCurrentResults() : getWithoutDpResults();
+    if (!results) return null;
+
+    const privacyField = withDp ? "orig_with_dp" : "orig_without_dp";
+    const fairnessField = withDp ? "orig_with_dp" : "orig_without_dp";
+
+    if (!results.privacy?.[privacyField] && !results.fairness?.[fairnessField]) {
+      return (
+        <div className="graph-card">
+          <p style={{ textAlign: "center", marginTop: "20px", fontSize: "14px", opacity: 0.7 }}>
+            No results available for {withDp ? "With DP" : "Without DP"} at this ε value.
+          </p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="graph-card">
+        {/* Privacy Risk Graph */}
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={getGraphData(withDp)}
+            margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="subpopulation" angle={-20} textAnchor="end" interval={0} height={80} />
+            <YAxis domain={[0, getMaxPrivacyRisk()]} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Orig" fill="#8884d8" barSize={20} />
+            <Bar dataKey="Mitigator" fill="#82ca9d" barSize={20} />
+          </BarChart>
+        </ResponsiveContainer>
+        <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
+          Privacy Risk across Subpopulations
+        </p>
+
+        <div style={{ marginTop: "30px" }}></div>
+
+        {/* Fairness Metrics Graph */}
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={getFairnessGraphData(withDp)}
+            margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="metric" angle={-20} textAnchor="end" interval={0} height={80} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Original" fill="#ffa07a" barSize={20} />
+            <Bar dataKey="Mitigator" fill="#0000FF" barSize={20} />
+          </BarChart>
+        </ResponsiveContainer>
+        <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
+          Fairness Metrics Comparison
+        </p>
+      </div>
+    );
+  };
 
   return (
     <div className="other-pages">

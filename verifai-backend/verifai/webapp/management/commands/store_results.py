@@ -3,7 +3,6 @@ from django.core.management.base import BaseCommand
 from webapp.models import UploadedModel, UploadedDataset, Session, FairnessEvaluationResult, PrivacyEvaluationResult, AccuracyResult
 from django.conf import settings
 import os
-import pickle
 import pandas as pd
 import math
 from aif360.datasets import StandardDataset
@@ -60,14 +59,13 @@ class Command(BaseCommand):
                 "Privileged Favorable": "g1+",
             }
 
-            # Step 1: Train WITHOUT DP only ONCE
-            logger.info(f"⚡ Running evaluations for without-DP...")
-            orig_model, original_model, dp_model = load_model(model_path, epsilon=0.0, num_features=num_features)
+            # Step 1: Train WITHOUT DP (epsilon=0.0) ONCE
+            logger.info(f"⚡ Running evaluations WITHOUT DP...")
+            orig_model, original_model, _ = load_model(model_path, epsilon=0.0, num_features=num_features)
 
             shadow_model_builder = lambda: original_model
             target_model_builder = lambda: original_model
 
-            # Original model (no mitigation)
             orig_results = train_orig(
                 X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
                 shadow_model_builder, target_model_builder
@@ -75,7 +73,6 @@ class Command(BaseCommand):
             self.save_results(session, orig_results, with_dp_flag=False, mitigator="Orig", subgroup_map=subgroup_map, epsilon=0.0)
             logger.info(f"✅ Stored original model results WITHOUT DP.")
 
-            # Mitigator model (user-selected)
             mitigator = session.mitigators
             if mitigator == "Reweighing":
                 trainer = train_rew
@@ -97,13 +94,12 @@ class Command(BaseCommand):
             epsilon_list = [0.1, 1, 5, 10]
 
             for epsilon in epsilon_list:
-                logger.info(f"⚡ Running evaluations for WITH-DP ε={epsilon}...")
+                logger.info(f"⚡ Running evaluations WITH DP ε={epsilon}...")
                 _, original_model, dp_model = load_model(model_path, epsilon, num_features)
 
                 shadow_model_builder = lambda: original_model
                 target_model_builder = lambda: dp_model
 
-                # Original model (no mitigation)
                 orig_results = train_orig(
                     X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
                     shadow_model_builder, target_model_builder
@@ -111,7 +107,6 @@ class Command(BaseCommand):
                 self.save_results(session, orig_results, with_dp_flag=True, mitigator="Orig", subgroup_map=subgroup_map, epsilon=epsilon)
                 logger.info(f"✅ Stored original model results WITH DP ε={epsilon}.")
 
-                # Mitigator model
                 mitigator_results = trainer(
                     X, y, aif_dataset, prot_attr_idx, dataset.priv_attb, 1 - dataset.priv_attb,
                     shadow_model_builder, target_model_builder
@@ -131,22 +126,16 @@ class Command(BaseCommand):
         subgroup_privacy = results.get('subgroup_means', {})
         metrics = results['all_metrics'][-1] if results['all_metrics'] else {}
 
-        # 📌 Build the lookup
         lookup = {
             'session': session,
             'with_dp': with_dp_flag,
             'mitigator': mitigator,
+            'epsilon': epsilon,  # Always include epsilon now
         }
-        if with_dp_flag:
-            lookup['epsilon'] = epsilon  # only add epsilon for DP models
 
-        # 📌 Save AccuracyResult
         AccuracyResult.objects.update_or_create(
             **lookup,
             defaults={
-                'epsilon': epsilon,
-                'with_dp': with_dp_flag,
-                'mitigator': mitigator,
                 'total_train_acc': safe_get(results, 'train_accuracies'),
                 'total_test_acc': safe_get(results, 'test_accuracies'),
                 'train_acc_g0_minus': safe_get(subgroup_acc_train, "g0-"),
@@ -160,13 +149,9 @@ class Command(BaseCommand):
             }
         )
 
-        # 📌 Save FairnessEvaluationResult
         FairnessEvaluationResult.objects.update_or_create(
             **lookup,
             defaults={
-                'epsilon': epsilon,
-                'with_dp': with_dp_flag,
-                'mitigator': mitigator,
                 'bal_acc': safe_get(metrics, "balanced_accuracy"),
                 'avg_odds_diff': safe_get(metrics, "average_odds_difference"),
                 'disp_imp': safe_get(metrics, "disparate_impact"),
@@ -176,18 +161,12 @@ class Command(BaseCommand):
             }
         )
 
-        # 📌 Save PrivacyEvaluationResult
         PrivacyEvaluationResult.objects.update_or_create(
             **lookup,
             defaults={
-                'epsilon': epsilon,
-                'with_dp': with_dp_flag,
-                'mitigator': mitigator,
                 'privacy_risk_g0_minus': safe_get(subgroup_privacy, "Unprivileged Unfavorable"),
                 'privacy_risk_g0_plus': safe_get(subgroup_privacy, "Unprivileged Favorable"),
                 'privacy_risk_g1_minus': safe_get(subgroup_privacy, "Privileged Unfavorable"),
                 'privacy_risk_g1_plus': safe_get(subgroup_privacy, "Privileged Favorable"),
             }
         )
-        
-        
