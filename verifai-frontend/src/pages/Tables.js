@@ -105,7 +105,7 @@ const Tables = () => {
       {/* Header */}
       <section className="tables-header">
         <div className="container-tables">
-          <h2>VERIFAI</h2>
+          {/* <h2>VERIFAI</h2> */}
           <div className="page-tab-tables">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>

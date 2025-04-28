@@ -64,7 +64,7 @@ const Login = () => {
       {/* Page Header */}
       <section className="login-header">
         <div className="login-container">
-          <h2>VerifAI</h2>
+          {/* <h2>VerifAI</h2> */}
           <div className="login-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>

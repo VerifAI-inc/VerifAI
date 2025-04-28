@@ -77,7 +77,7 @@ const Profile = () => {
       {/* Profile Header Section */}
       <section className="profile-header">
         <div className="profile-container">
-          <h2>VERIFAI</h2>
+          {/* <h2>VERIFAI</h2> */}
           <div className="profile-page-tab">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>

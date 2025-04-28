@@ -220,7 +220,7 @@ Model Evaluation Results:
     <div className="reports-page">
       <section className="reports-header">
         <div className="container-reports">
-          <h2>VERIFAI</h2>
+          {/* <h2>VERIFAI</h2> */}
           <div className="page-tab-reports">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>

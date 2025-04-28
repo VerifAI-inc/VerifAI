@@ -64,7 +64,7 @@ const Signup = () => {
       {/* Page Header */}
       <section className="signup-header">
         <div className="signup-container">
-          <h2>VerifAI</h2>
+          {/* <h2>VerifAI</h2> */}
           <div className="signup-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>

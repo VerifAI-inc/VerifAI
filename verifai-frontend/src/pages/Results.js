@@ -258,7 +258,7 @@ const Results = () => {
     <div className="results-container">
       <section className="page-title-home">
         <div className="container-home">
-          <h2>VerifAI</h2>
+          {/* <h2>VerifAI</h2> */}
           <div className="page-tab-home">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>

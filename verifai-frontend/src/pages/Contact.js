@@ -25,7 +25,7 @@ const Contact = () => {
       {/* Background Section (Same as Home Page) */}
       <section className="contact-header">
         <div className="container-contact">
-          <h2>VERIFAI</h2>
+          {/* <h2>VERIFAI</h2> */}
           <div className="page-tab-contact">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
