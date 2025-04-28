@@ -1,3 +1,5 @@
+// src/pages/Results.js
+
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaDownload, FaArrowRight, FaArrowLeft } from "react-icons/fa";
@@ -6,32 +8,56 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import "../styles/Global.css";
 import "../styles/pages/Results.css";
 
+// 🔵 Move epsilonsNeeded OUTSIDE to avoid eslint warning
+const epsilonsNeeded = ["0.1", "1", "5", "10"];
+
 const Results = () => {
   const navigate = useNavigate();
   const [epsilon, setEpsilon] = useState(1.0);
-  const [results, setResults] = useState(null);
+  const [allResults, setAllResults] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/store-results/")
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to fetch results");
-        return response.json();
-      })
-      .then((data) => {
-        console.log("✅ Results from backend:", data);
-        setResults(data);
-      })
-      .catch((error) => {
-        console.error("❌ Error fetching results:", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    const interval = setInterval(() => {
+      fetch("http://localhost:8000/api/store-results/")
+        .then((response) => {
+          if (!response.ok) throw new Error("Failed to fetch results");
+          return response.json();
+        })
+        .then((data) => {
+          console.log("✅ Results from backend:", data);
+          setAllResults(data);
+
+          const allAvailable = epsilonsNeeded.every((eps) => {
+            const res = data[eps];
+            return res && res.privacy && res.fairness && res.accuracy;
+          });
+
+          if (allAvailable) {
+            clearInterval(interval);
+            setLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.error("❌ Error fetching results:", error);
+        });
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleSliderChange = (event) => {
     setEpsilon(parseFloat(event.target.value));
+  };
+
+  const getCurrentResults = () => {
+    if (!allResults) return null;
+    return allResults[String(epsilon)] || null;
+  };
+
+  const getWithoutDpResults = () => {
+    if (!allResults) return null;
+    return allResults["0.0"] || null;
   };
 
   const subpopLabels = {
@@ -41,7 +67,17 @@ const Results = () => {
     "g1+": "Privileged Favorable",
   };
 
-  const getGraphData = (withDp) => {
+  const fairnessMetricsLabels = {
+    bal_acc: "Bal Acc",
+    avg_odds_diff: "Avg Odds Diff",
+    disp_imp: "Disp Imp",
+    stat_par_diff: "Stat Par Diff",
+    eq_opp_diff: "Eq Opp Diff",
+    theil_ind: "Theil Ind",
+  };
+
+  const getPrivacyGraphData = (withDp) => {
+    const results = withDp ? getCurrentResults() : getWithoutDpResults();
     if (!results || !results.privacy) return [];
 
     const orig = withDp ? results.privacy?.orig_with_dp || {} : results.privacy?.orig_without_dp || {};
@@ -54,19 +90,41 @@ const Results = () => {
     }));
   };
 
+  const getFairnessGraphData = (withDp) => {
+    const results = withDp ? getCurrentResults() : getWithoutDpResults();
+    if (!results || !results.fairness) return [];
+
+    const entries = Object.entries(results.fairness);
+    const relevantEntries = entries.filter(([key, _]) =>
+      withDp ? key.endsWith("_with_dp") : key.endsWith("_without_dp")
+    );
+
+    const fairnessData = {};
+
+    for (const [name, metrics] of relevantEntries) {
+      const label = name.startsWith("orig") ? "Original" : "Mitigator";
+      for (const [metricKey, value] of Object.entries(metrics)) {
+        if (!fairnessData[metricKey]) {
+          fairnessData[metricKey] = { metric: fairnessMetricsLabels[metricKey] };
+        }
+        fairnessData[metricKey][label] = value;
+      }
+    }
+
+    return Object.values(fairnessData);
+  };
+
   const getMaxPrivacyRisk = () => {
-    if (!results || !results.privacy) return 1;
+    const results = getCurrentResults();
+    const withoutDpResults = getWithoutDpResults();
+    if (!results || !withoutDpResults) return 1;
 
     const values = [];
-    const all_keys = ["g0-", "g0+", "g1-", "g1+"];
-    const fields = [
-      "orig_without_dp", "mitigator_without_dp",
-      "orig_with_dp", "mitigator_with_dp",
-    ];
+    const fields = ["orig_without_dp", "mitigator_without_dp", "orig_with_dp", "mitigator_with_dp"];
 
     fields.forEach((field) => {
-      const data = results.privacy[field] || {};
-      all_keys.forEach((key) => {
+      const data = results.privacy[field] || withoutDpResults.privacy[field] || {};
+      ["g0-", "g0+", "g1-", "g1+"].forEach((key) => {
         if (data[key] !== undefined) {
           values.push(data[key]);
         }
@@ -74,34 +132,60 @@ const Results = () => {
     });
 
     if (values.length === 0) return 1;
-    const maxVal = Math.max(...values);
-    const roundedMax = Math.ceil(maxVal * 20) / 20;
-    return roundedMax;
+    return Math.ceil(Math.max(...values) * 20) / 20;
   };
 
-  const renderGraph = (title, withDp) => (
-    <div className="graph-card">
-      <h2>{title}</h2>
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart
-          data={getGraphData(withDp)}
-          margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="subpopulation" angle={-20} textAnchor="end" interval={0} height={100} />
-          <YAxis domain={[0, getMaxPrivacyRisk()]} />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="Orig" fill="#8884d8" barSize={20} />
-          <Bar dataKey="Mitigator" fill="#82ca9d" barSize={20} />
-        </BarChart>
-      </ResponsiveContainer>
-    </div>
-  );
+  const renderGraphs = (withDp) => {
+    const results = withDp ? getCurrentResults() : getWithoutDpResults();
+    if (!results) return null;
+
+    return (
+      <div className="graph-card">
+        {/* Privacy Risk Graph */}
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={getPrivacyGraphData(withDp)}
+            margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="subpopulation" angle={-20} textAnchor="end" interval={0} height={80} />
+            <YAxis domain={[0, getMaxPrivacyRisk()]} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Orig" fill="#8884d8" barSize={20} />
+            <Bar dataKey="Mitigator" fill="#82ca9d" barSize={20} />
+          </BarChart>
+        </ResponsiveContainer>
+        <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
+          Privacy Risk across Subpopulations
+        </p>
+
+        <div style={{ marginTop: "30px" }}></div>
+
+        {/* Fairness Metrics Graph */}
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart
+            data={getFairnessGraphData(withDp)}
+            margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="metric" angle={-20} textAnchor="end" interval={0} height={80} />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Original" fill="#ffa07a" barSize={20} />
+            <Bar dataKey="Mitigator" fill="#0000FF" barSize={20} />
+          </BarChart>
+        </ResponsiveContainer>
+        <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
+          Fairness Metrics Comparison
+        </p>
+      </div>
+    );
+  };
 
   return (
     <div className="results-container">
-      {/* Top Banner Section */}
       <section className="page-title-home">
         <div className="container-home">
           <h2>VerifAI</h2>
@@ -113,10 +197,8 @@ const Results = () => {
         </div>
       </section>
 
-      {/* Main White Section */}
       <div className="results-main-content">
-
-        {/* Action Buttons (Back and Download) */}
+        {/* Action Buttons */}
         <div className="results-action-group" style={{ display: "flex", justifyContent: "space-between", marginBottom: "30px", marginTop: "30px" }}>
           <Link to="/upload" className="results-btn" style={{ width: "250px", textDecoration: "none" }} disabled={loading}>
             <FaArrowLeft className="icon-space" /> Back to Upload
@@ -126,7 +208,7 @@ const Results = () => {
           </button>
         </div>
 
-        {/* Title and Description */}
+        {/* Header */}
         <div className="results-header">
           <h1 className="results-title">Results Analysis</h1>
           <p className="results-description">
@@ -139,7 +221,7 @@ const Results = () => {
           <Slider value={epsilon} onChange={handleSliderChange} label="Epsilon (ε)" />
         </div>
 
-        {/* Graphs or Loading Spinner */}
+        {/* Graphs */}
         {loading ? (
           <div className="loading-container">
             <div className="spinner"></div>
@@ -148,13 +230,19 @@ const Results = () => {
         ) : (
           <div className="results-graphs-wrapper">
             <div className="graphs-container">
-              {renderGraph("Privacy Risk (Without DP)", false)}
-              {renderGraph("Privacy Risk (With DP)", true)}
+              <div style={{ width: "48%" }}>
+                <h2 style={{ textAlign: "center", marginBottom: "10px" }}>Without DP</h2>
+                {renderGraphs(false)}
+              </div>
+              <div style={{ width: "48%" }}>
+                <h2 style={{ textAlign: "center", marginBottom: "10px" }}>With DP</h2>
+                {renderGraphs(true)}
+              </div>
             </div>
           </div>
         )}
 
-        {/* Buttons for Tables and Report */}
+        {/* Tables and Report Buttons */}
         <div className="results-button-group">
           <button
             className="results-btn"
