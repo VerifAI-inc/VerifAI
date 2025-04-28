@@ -6,7 +6,7 @@ class User(AbstractUser):
     job_role = models.CharField(max_length=255, blank=True, null=True)
     job_field = models.CharField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     groups = models.ManyToManyField(Group, related_name="custom_user_groups")
     user_permissions = models.ManyToManyField(Permission, related_name="custom_user_permissions")
 
@@ -18,14 +18,14 @@ class Session(models.Model):
     mitigators = models.CharField(max_length=255)
     epsilon = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
-    
-    class Meta:
-        indexes = [models.Index(fields=['user', 'epsilon'])] # Add index for performance
 
-# Uploaded Model (ML Model)
+    class Meta:
+        indexes = [models.Index(fields=['user', 'epsilon'])]
+
+# Uploaded Model
 class UploadedModel(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    session = models.OneToOneField(Session, on_delete=models.CASCADE) 
+    session = models.OneToOneField(Session, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     file = models.FileField(upload_to="models/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
@@ -42,7 +42,7 @@ class UploadedDataset(models.Model):
     file = models.FileField(upload_to="datasets/")
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-# Fairness Evaluation Result (One-to-One with Session)
+# Fairness Evaluation Result
 class FairnessEvaluationResult(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
@@ -57,11 +57,11 @@ class FairnessEvaluationResult(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator'], name='unique_fairness_session_withdp_mitigator')
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator', 'epsilon'], name='unique_fairness_session_withdp_mitigator')
         ]
         indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]
 
-# Privacy Evaluation Result (One-to-One with Session)
+# Privacy Evaluation Result
 class PrivacyEvaluationResult(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
@@ -74,11 +74,11 @@ class PrivacyEvaluationResult(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator'], name='unique_privacy_session_withdp_mitigator')
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator', 'epsilon'], name='unique_privacy_session_withdp_mitigator')
         ]
         indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]
 
-# Accuracy Results (One-to-One with Session)
+# Accuracy Result
 class AccuracyResult(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     with_dp = models.BooleanField()
@@ -97,7 +97,7 @@ class AccuracyResult(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator'], name='unique_accuracy_session_withdp_mitigator')
+            models.UniqueConstraint(fields=['session', 'with_dp', 'mitigator', 'epsilon'], name='unique_accuracy_session_withdp_mitigator')
         ]
         indexes = [models.Index(fields=['session', 'epsilon', 'with_dp', 'mitigator'])]
 

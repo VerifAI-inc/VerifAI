@@ -8,7 +8,7 @@ def train_model_task(session_id):
     Background task to train models and store results.
     """
     try:
-        call_command('store_results', session_id=session_id)
+        call_command('store_results')
         return "Training and storing completed!"
     except Exception as e:
         return f"Error during training: {str(e)}"
