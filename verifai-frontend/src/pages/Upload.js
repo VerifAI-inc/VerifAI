@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/pages/Upload.css";
 
 const Upload = () => {
+  const navigate = useNavigate();
+
   const [uploadModelFile, setUploadModelFile] = useState(null);
   const [uploadDatasetFile, setUploadDatasetFile] = useState(null);
   const [uploadLabelName, setUploadLabelName] = useState("");
@@ -19,7 +21,7 @@ const Upload = () => {
   };
 
   const getAuthHeader = () => ({
-    "Authorization": `Bearer ${localStorage.getItem('token')}`,
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
   });
 
   const handleModelFileChange = async (e) => {
@@ -60,12 +62,12 @@ const Upload = () => {
     formData.append("favorableLabel", uploadFavorableLabel);
     formData.append("protectedAttribute", uploadProtectedAttribute);
     formData.append("privilegedAttribute", uploadPrivilegedAttribute);
-    setUploadDpModel("");  // (this line should be before, ideally when setting state)
+    setUploadDpModel("");
     formData.append("dpModel", uploadDpModel);
     formData.append("epsilon", "1.0");
-  
+
     uploadMitigators.forEach((mitigator) => formData.append("mitigators", mitigator));
-  
+
     try {
       const response = await fetch("http://127.0.0.1:8000/api/upload/", {
         method: "POST",
@@ -74,12 +76,11 @@ const Upload = () => {
       });
       const data = await response.json();
       console.log("Upload response:", data);
-      setUploadResult(data);  // ✅ update `uploadResult`, not `previewInfo`
+      setUploadResult(data);
     } catch (error) {
       console.error("Error during file upload:", error);
     }
   };
-  
 
   return (
     <div className="upload-container">
@@ -109,7 +110,6 @@ const Upload = () => {
                   />
                 </div>
 
-                {/* Model Preview */}
                 {previewInfo && (
                   <div className="model-preview">
                     <h3>Uploaded Model</h3>
@@ -194,9 +194,15 @@ const Upload = () => {
               </div>
             </div>
 
-            <button className="upload-button" onClick={handleSubmit}>
-              GET RESULTS
-            </button>
+            {/* BUTTONS SECTION */}
+            <div style={{ display: "flex", justifyContent: "center", gap: "30px", marginTop: "30px" }}>
+              <button className="upload-button" onClick={handleSubmit}>
+                Start Training
+              </button>
+              <button className="upload-button" onClick={() => navigate("/results")}> 
+                See Results
+              </button>
+            </div>
 
             {uploadResult && (
               <div className="upload-result">
