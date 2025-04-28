@@ -168,7 +168,12 @@ def store_results(request):
 
     return JsonResponse(all_results)
 
-client = OpenAI(api_key="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")
+# read api key from txt file located in ../venv/key.txt
+api_key_path = os.path.join(os.path.dirname(__file__), "../venv/key.txt")
+if os.path.exists(api_key_path):
+    with open(api_key_path, "r") as f:
+        api_key = f.read().strip()
+client = OpenAI(api_key=api_key)
 
 @api_view(["GET", "POST"])
 @permission_classes([AllowAny])
