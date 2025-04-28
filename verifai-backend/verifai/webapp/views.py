@@ -175,6 +175,7 @@ if os.path.exists(api_key_path):
         api_key = f.read().strip()
 client = OpenAI(api_key=api_key)
 
+
 @api_view(["GET", "POST"])
 @permission_classes([AllowAny])
 def generate_report(request):
