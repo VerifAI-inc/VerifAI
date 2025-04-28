@@ -38,12 +38,13 @@
 
 .reports-section {
     background: white;
-    padding: 60px 15%;
+    padding: 60px 12%;
     text-align: center;
+    /* font-family: 'Vollkorn', serif; */
 }
 
 .reports-title {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: bold;
     margin-bottom: 15px;
     color: #1b3b6f;
@@ -52,78 +53,56 @@
 .reports-description {
     font-size: 1.2rem;
     color: #555;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .reports-button-container {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 20px;
     flex-wrap: wrap;
-    margin-top: 15px;
+    margin-bottom: 30px;
 }
 
-.reports-generate-btn, .reports-download-btn, .reports-back-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1rem;
+.reports-generate-btn,
+.reports-download-btn,
+.reports-back-btn {
+    background: linear-gradient(to right, #4a90e2, #0056b3);
+    color: white;
     font-weight: bold;
+    font-size: 1.1rem;
+    padding: 12px 24px;
+    border: none;
     border-radius: 30px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    padding: 12px 20px;
-    border: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.reports-generate-btn {
-    background: linear-gradient(to right, #4a90e2, #0056b3);
-    color: white;
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
-}
-
-.reports-generate-btn:hover {
+.reports-generate-btn:hover,
+.reports-download-btn:hover,
+.reports-back-btn:hover {
     background: linear-gradient(to right, #0056b3, #004085);
     transform: scale(1.05);
 }
 
-.reports-download-btn {
-    background: linear-gradient(to right, #4a90e2, #0056b3);
-    color: white;
-    box-shadow: 0 5px 15px linear-gradient(to right, #4a90e2, #0056b3);
-}
-
-.reports-download-btn:hover {
-    background: linear-gradient(to right, #4a90e2, #0056b3);
-    transform: scale(1.05);
-}
-
-.reports-back-btn {
-    background: linear-gradient(to right, #4a90e2, #0056b3);
-    color: white;
-    box-shadow: 0 5px 15px linear-gradient(to right, #4a90e2, #0056b3);
-}
-
-.reports-back-btn:hover {
-    background: linear-gradient(to right, #4a90e2, #0056b3);
-    transform: scale(1.05);
-}
-
 .report-content {
-    margin-top: 40px;
-    padding: 20px;
-    border-radius: 10px;
-    background: #fafafa;
-    text-align: left;
-    font-size: 1.2rem;
-    color: #444;
-    text-align: center;
-    min-height: 30px;
+    background: #f9f9f9;
+    padding: 30px;
+    margin-top: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    min-height: 120px;
 }
 
 .generated-report {
-    font-weight: 500;
-    line-height: 1.6;
+    color: #333;
+    font-size: 1.2rem;
+    line-height: 1.7;
+    white-space: pre-line;
+    text-align: left;
 }
 
 .report-placeholder {
@@ -134,30 +113,32 @@
 
 @media (max-width: 1024px) {
     .reports-section {
-        padding: 60px 10%;
+        padding: 50px 8%;
     }
 }
 
 @media (max-width: 768px) {
     .reports-section {
-        padding: 50px 5%;
+        padding: 40px 5%;
     }
 
     .reports-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
 
     .reports-description {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
 
-    .reports-back-btn {
+    .reports-button-container {
         flex-direction: column;
         align-items: center;
     }
 
-    .reports-generate-btn, .reports-download-btn, .reports-back-btn {
+    .reports-generate-btn,
+    .reports-download-btn,
+    .reports-back-btn {
         width: 100%;
-        max-width: 250px;
+        max-width: 300px;
     }
 }

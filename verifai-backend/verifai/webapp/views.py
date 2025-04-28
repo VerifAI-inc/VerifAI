@@ -14,6 +14,9 @@ from django.http import JsonResponse
 from .models import Session, AccuracyResult, PrivacyEvaluationResult, FairnessEvaluationResult
 from django.core.management import call_command
 from .tasks import train_model_task
+from openai import OpenAI
+from rest_framework.decorators import api_view, permission_classes
+
 
 class ReportHistoryList(ListAPIView):
     queryset = ReportHistory.objects.all().order_by('-creation_date')
@@ -84,6 +87,7 @@ class PreviewModelAPIView(APIView):
         
         return Response(response_data, status=status.HTTP_200_OK)
 
+@api_view(["GET"])
 def store_results(request):
     session = Session.objects.last()  # You can later adjust to request.user if needed
 
@@ -163,3 +167,46 @@ def store_results(request):
         }
 
     return JsonResponse(all_results)
+
+client = OpenAI(api_key="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")
+
+@api_view(["GET", "POST"])
+@permission_classes([AllowAny])
+def generate_report(request):
+    print("🛠️ 1. Received request at /api/generate-report/")
+
+    # Extract the prompt from the request data
+    prompt = request.data.get("prompt")
+    print("🛠️ 2. Received Prompt:", prompt[:500], "..." if len(prompt) > 500 else "")  # Print first 500 chars
+
+    if not prompt:
+        print("🛠️ 2.1: No prompt provided!")
+        return Response({"error": "No prompt provided."}, status=400)
+
+    try:
+        print("🛠️ 3. Sending prompt to OpenAI API...")
+
+        # OpenAI's new API for conversation-based models
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",  # You can change the model here as needed
+            messages=[
+                # {"role": "system", "content": "You are an expert AI evaluation assistant."},
+                {"role": "user", "content": "You are an expert AI evaluation assistant." + prompt}
+            ],
+            # max_tokens=2000,  # Adjust max tokens as necessary
+            # temperature=0.7,  # Set the creativity level (0.0-1.0)
+        )
+
+        print("🛠️ 4. Received OpenAI response.")
+
+        # Access the response correctly using dot notation
+        generated_text = response.choices[0].message  # Correct way to access the message
+
+        print("🛠️ 5. Extracted generated text.")
+
+        # Return the generated text
+        return Response({"report_text": generated_text}, status=200)
+
+    except Exception as e:
+        print("🛠️ 6. ERROR calling OpenAI:", str(e))
+        return Response({"error": str(e)}, status=500)
