@@ -22,9 +22,10 @@
 }
 
 .navbar-logo img {
-    width: 40px;
+    /* width: 40px; */
     height: 40px;
     margin-right: 10px;
+    object-fit: contain;
 }
 
 .navbar-links {
