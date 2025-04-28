@@ -7,7 +7,7 @@ import { FaDownload, FaArrowLeft } from "react-icons/fa";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
-const epsilons = ["0.0", "0.1", "1.0", "5.0", "10.0"];
+const epsilons = ["0.0", "0.1", "1", "5", "10"];
 
 const Tables = () => {
   const [allResults, setAllResults] = useState(null);
@@ -84,19 +84,20 @@ const Tables = () => {
   const getAccuracyTable = (epsilon) => {
     const res = allResults?.[epsilon];
     if (!res || !res.accuracy) return [];
-
-    const acc = res.accuracy;
-
+  
+    const acc = epsilon === "0.0" ? res.accuracy.without_dp : res.accuracy.with_dp;
+    if (!acc) return [];
+  
     return [
-      ["Total Train Accuracy", acc.total_train_acc || "-"],
-      ["Total Test Accuracy", acc.total_test_acc || "-"],
-      ["Test g0-", acc.test_acc_g0_minus || "-"],
-      ["Test g0+", acc.test_acc_g0_plus || "-"],
-      ["Test g1-", acc.test_acc_g1_minus || "-"],
-      ["Test g1+", acc.test_acc_g1_plus || "-"]
+      ["Total Train Accuracy", acc.train ?? "-"],
+      ["Total Test Accuracy", acc.test ?? "-"],
+      ["Test g0-", acc.subgroups?.["g0-"] ?? "-"],
+      ["Test g0+", acc.subgroups?.["g0+"] ?? "-"],
+      ["Test g1-", acc.subgroups?.["g1-"] ?? "-"],
+      ["Test g1+", acc.subgroups?.["g1+"] ?? "-"]
     ];
   };
-
+  
   const epsilonLabel = (eps) => eps === "0.0" ? "Without DP" : `With DP (ε=${eps})`;
 
   return (
