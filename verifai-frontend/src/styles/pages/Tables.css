@@ -155,8 +155,13 @@
 
 .tables-download-btn {
     background: #0088ff;
+    color: white; /* <--- add this */
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.5rem;
 }
-
 .tables-download-btn:hover {
-    background: #0088ff;
+    background: #0070cc;
 }
