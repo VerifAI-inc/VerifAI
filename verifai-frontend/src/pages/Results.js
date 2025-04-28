@@ -4,9 +4,21 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaDownload, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import Slider from "../components/Slider";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import "../styles/Global.css";
 import "../styles/pages/Results.css";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import { useRef } from "react";
 
 // 🔵 Move epsilonsNeeded OUTSIDE to avoid eslint warning
 const epsilonsNeeded = ["0.1", "1", "5", "10"];
@@ -16,6 +28,26 @@ const Results = () => {
   const [epsilon, setEpsilon] = useState(1.0);
   const [allResults, setAllResults] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const graphContainerRef = useRef(null); // 📌 Ref for the graphs
+
+  const handleDownloadResults = async () => {
+    if (!graphContainerRef.current) {
+      console.error("Graph container not found!");
+      return;
+    }
+
+    const canvas = await html2canvas(graphContainerRef.current, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+    pdf.addImage(imgData, "PNG", 0, 20, pdfWidth, pdfHeight);
+    pdf.save("VerifAI_Results.pdf");
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -80,8 +112,12 @@ const Results = () => {
     const results = withDp ? getCurrentResults() : getWithoutDpResults();
     if (!results || !results.privacy) return [];
 
-    const orig = withDp ? results.privacy?.orig_with_dp || {} : results.privacy?.orig_without_dp || {};
-    const mitigator = withDp ? results.privacy?.mitigator_with_dp || {} : results.privacy?.mitigator_without_dp || {};
+    const orig = withDp
+      ? results.privacy?.orig_with_dp || {}
+      : results.privacy?.orig_without_dp || {};
+    const mitigator = withDp
+      ? results.privacy?.mitigator_with_dp || {}
+      : results.privacy?.mitigator_without_dp || {};
 
     return Object.entries(subpopLabels).map(([key, label]) => ({
       subpopulation: label,
@@ -105,7 +141,9 @@ const Results = () => {
       const label = name.startsWith("orig") ? "Original" : "Mitigator";
       for (const [metricKey, value] of Object.entries(metrics)) {
         if (!fairnessData[metricKey]) {
-          fairnessData[metricKey] = { metric: fairnessMetricsLabels[metricKey] };
+          fairnessData[metricKey] = {
+            metric: fairnessMetricsLabels[metricKey],
+          };
         }
         fairnessData[metricKey][label] = value;
       }
@@ -120,10 +158,16 @@ const Results = () => {
     if (!results || !withoutDpResults) return 1;
 
     const values = [];
-    const fields = ["orig_without_dp", "mitigator_without_dp", "orig_with_dp", "mitigator_with_dp"];
+    const fields = [
+      "orig_without_dp",
+      "mitigator_without_dp",
+      "orig_with_dp",
+      "mitigator_with_dp",
+    ];
 
     fields.forEach((field) => {
-      const data = results.privacy[field] || withoutDpResults.privacy[field] || {};
+      const data =
+        results.privacy[field] || withoutDpResults.privacy[field] || {};
       ["g0-", "g0+", "g1-", "g1+"].forEach((key) => {
         if (data[key] !== undefined) {
           values.push(data[key]);
@@ -148,7 +192,13 @@ const Results = () => {
             margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="subpopulation" angle={-20} textAnchor="end" interval={0} height={80} />
+            <XAxis
+              dataKey="subpopulation"
+              angle={-20}
+              textAnchor="end"
+              interval={0}
+              height={80}
+            />
             <YAxis domain={[0, getMaxPrivacyRisk()]} />
             <Tooltip />
             <Legend />
@@ -156,7 +206,14 @@ const Results = () => {
             <Bar dataKey="Mitigator" fill="#82ca9d" barSize={20} />
           </BarChart>
         </ResponsiveContainer>
-        <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "4px",
+            fontSize: "13px",
+            opacity: 0.8,
+          }}
+        >
           Privacy Risk across Subpopulations
         </p>
 
@@ -169,7 +226,13 @@ const Results = () => {
             margin={{ top: 20, right: 30, left: 50, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="metric" angle={-20} textAnchor="end" interval={0} height={80} />
+            <XAxis
+              dataKey="metric"
+              angle={-20}
+              textAnchor="end"
+              interval={0}
+              height={80}
+            />
             <YAxis />
             <Tooltip />
             <Legend />
@@ -177,7 +240,14 @@ const Results = () => {
             <Bar dataKey="Mitigator" fill="#0000FF" barSize={20} />
           </BarChart>
         </ResponsiveContainer>
-        <p style={{ textAlign: "center", marginTop: "4px", fontSize: "13px", opacity: 0.8 }}>
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "4px",
+            fontSize: "13px",
+            opacity: 0.8,
+          }}
+        >
           Fairness Metrics Comparison
         </p>
       </div>
@@ -199,11 +269,29 @@ const Results = () => {
 
       <div className="results-main-content">
         {/* Action Buttons */}
-        <div className="results-action-group" style={{ display: "flex", justifyContent: "space-between", marginBottom: "30px", marginTop: "30px" }}>
-          <Link to="/upload" className="results-btn" style={{ width: "250px", textDecoration: "none" }} disabled={loading}>
+        <div
+          className="results-action-group"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "30px",
+            marginTop: "30px",
+          }}
+        >
+          <Link
+            to="/upload"
+            className="results-btn"
+            style={{ width: "250px", textDecoration: "none" }}
+            disabled={loading}
+          >
             <FaArrowLeft className="icon-space" /> Back to Upload
           </Link>
-          <button className="results-btn" style={{ width: "250px" }} disabled={loading}>
+          <button
+            className="results-btn"
+            style={{ width: "250px" }}
+            onClick={handleDownloadResults}
+            disabled={loading}
+          >
             <FaDownload className="icon-space" /> Download Results
           </button>
         </div>
@@ -212,13 +300,18 @@ const Results = () => {
         <div className="results-header">
           <h1 className="results-title">Results Analysis</h1>
           <p className="results-description">
-            Select one of the following ε (epsilon) values: <strong>0.1, 1, 5, 10</strong>
+            Select one of the following ε (epsilon) values:{" "}
+            <strong>0.1, 1, 5, 10</strong>
           </p>
         </div>
 
         {/* Slider */}
         <div className="slider-container">
-          <Slider value={epsilon} onChange={handleSliderChange} label="Epsilon (ε)" />
+          <Slider
+            value={epsilon}
+            onChange={handleSliderChange}
+            label="Epsilon (ε)"
+          />
         </div>
 
         {/* Graphs */}
@@ -229,13 +322,17 @@ const Results = () => {
           </div>
         ) : (
           <div className="results-graphs-wrapper">
-            <div className="graphs-container">
+            <div ref={graphContainerRef} className="graphs-container">
               <div style={{ width: "48%" }}>
-                <h2 style={{ textAlign: "center", marginBottom: "10px" }}>Without DP</h2>
+                <h2 style={{ textAlign: "center", marginBottom: "10px" }}>
+                  Without DP
+                </h2>
                 {renderGraphs(false)}
               </div>
               <div style={{ width: "48%" }}>
-                <h2 style={{ textAlign: "center", marginBottom: "10px" }}>With DP</h2>
+                <h2 style={{ textAlign: "center", marginBottom: "10px" }}>
+                  With DP
+                </h2>
                 {renderGraphs(true)}
               </div>
             </div>
