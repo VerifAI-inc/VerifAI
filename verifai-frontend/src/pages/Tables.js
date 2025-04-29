@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaDownload, FaArrowLeft } from "react-icons/fa";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import API_BASE_URL from "../config";
 
 const epsilons = ["0.0", "0.1", "1", "5", "10"];
 
@@ -15,7 +16,7 @@ const Tables = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/store-results/")
+    fetch(`${API_BASE_URL}/api/store-results/`)
       .then((response) => {
         if (!response.ok) throw new Error("Failed to fetch results");
         return response.json();

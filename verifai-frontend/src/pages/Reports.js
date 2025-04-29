@@ -5,6 +5,7 @@ import "../styles/pages/Reports.css";
 import { Link, useNavigate } from "react-router-dom";
 import { FaDownload, FaArrowLeft } from "react-icons/fa";
 import jsPDF from "jspdf";
+import API_BASE_URL from "../config";
 
 const Reports = () => {
   const [reportText, setReportText] = useState(null);
@@ -14,7 +15,7 @@ const Reports = () => {
   // Fetch results from backend
   const fetchResults = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/store-results/");
+      const response = await fetch(`${API_BASE_URL}/api/store-results/`);
       const data = await response.json();
       if (!data) return null;
       const resultsNoDP = data["0.0"];
@@ -53,7 +54,7 @@ Model Evaluation Results:
       if (!fetchedResults) throw new Error("No results");
 
       const prompt = buildPrompt(fetchedResults);
-      const completionResponse = await fetch("http://localhost:8000/api/generate-report/", {
+      const completionResponse = await fetch(`${API_BASE_URL}/api/generate-report/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
@@ -79,7 +80,7 @@ Model Evaluation Results:
     const doc = new jsPDF();
     const marginLeft = 10;
     const marginRight = 10;
-    const maxWidth = 180; // 210 (A4 width) - 2*15 margins
+    // const maxWidth = 180; // 210 (A4 width) - 2*15 margins
   
     doc.setFontSize(18);
     doc.setFont("helvetica", "bold");

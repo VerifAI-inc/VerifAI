@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/pages/Upload.css";
+import API_BASE_URL from "../config";
 
 const Upload = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Upload = () => {
     formData.append("num_features", "10");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/preview-model/", {
+      const response = await fetch(`${API_BASE_URL}/api/preview-model/`, {
         method: "POST",
         headers: getAuthHeader(),
         body: formData,
@@ -69,7 +70,7 @@ const Upload = () => {
     uploadMitigators.forEach((mitigator) => formData.append("mitigators", mitigator));
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/upload/", {
+      const response = await fetch(`${API_BASE_URL}/api/upload/`, {
         method: "POST",
         headers: getAuthHeader(),
         body: formData,

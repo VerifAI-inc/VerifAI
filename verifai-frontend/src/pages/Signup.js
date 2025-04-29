@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/pages/Signup.css";
+import API_BASE_URL from "../config";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -36,7 +37,7 @@ const Signup = () => {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auth/signup/", {
+      const response = await fetch(`${API_BASE_URL}/api/auth/signup/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

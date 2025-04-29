@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaDownload, FaArrowRight, FaArrowLeft } from "react-icons/fa";
 import Slider from "../components/Slider";
+import API_BASE_URL from "../config";
 import {
   BarChart,
   Bar,
@@ -51,7 +52,7 @@ const Results = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      fetch("http://localhost:8000/api/store-results/")
+      fetch(`${API_BASE_URL}/api/store-results/`)
         .then((response) => {
           if (!response.ok) throw new Error("Failed to fetch results");
           return response.json();

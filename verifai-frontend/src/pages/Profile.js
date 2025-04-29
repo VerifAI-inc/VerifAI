@@ -3,6 +3,7 @@ import "../styles/pages/Profile.css";
 import axios from "axios";
 import member4 from "../assets/images/member4.jpg";
 import { Link, useNavigate } from "react-router-dom";
+import API_BASE_URL from "../config";
 import {
   FaSearch,
   FaUserCircle,
@@ -28,7 +29,7 @@ const Profile = () => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/auth/user/profile/", {
+      .get(`${API_BASE_URL}/api/auth/user/profile/`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -40,7 +41,7 @@ const Profile = () => {
   // Fetch reports on component mount
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/reports/")
+      .get(`${API_BASE_URL}/api/reports/`)
       .then((response) => {
         setReports(response.data);
       })
@@ -156,7 +157,7 @@ const Profile = () => {
                     onClick={() => {
                       axios
                         .put(
-                          "http://127.0.0.1:8000/api/auth/user/profile/",
+                          `${API_BASE_URL}/api/auth/user/profile/`,
                           editForm,
                           {
                             headers: {
