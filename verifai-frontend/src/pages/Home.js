@@ -6,7 +6,7 @@ import Slider from "react-slick";
 // Import images
 import privacyImage from "../assets/images/privacy-image.webp";
 import fairnessImage from "../assets/images/fairness-image.webp";
-import member1 from "../assets/images/member1.jpg";
+import member1 from "../assets/images/member1.JPG";
 import member2 from "../assets/images/member2.jpeg";
 import member3 from "../assets/images/member3.jpg";
 import member4 from "../assets/images/member4.jpg";
@@ -125,6 +125,47 @@ const Home = () => {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Investment Section Title */}
+      <section className="page-title-investment">
+        <div className="container-home">
+          <h2>Investment</h2>
+          <div className="page-tab-home">
+            <Link to="/">HOME</Link>
+            <i className="fas fa-angle-right"></i>
+            <span>INVESTMENT</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Investment Invitation Text & Video */}
+      <section className="investment-invite">
+        <div className="container-home">
+          <h2>Interested in Investing?</h2>
+          <p>
+            If you want to invest in VerifAI and be part of our exciting journey
+            towards building fair and privacy-preserving AI solutions, please contact us.
+          </p>
+        </div>
+      </section>
+
+      <section className="investment-video-section">
+        <div className="container-home">
+          <div className="video-frame">
+            <video 
+              controls 
+              autoPlay 
+              muted 
+              loop 
+              preload="metadata"
+              className="investment-video"
+              >
+              <source src="/videos/investment-promo.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
           </div>
         </div>
       </section>
