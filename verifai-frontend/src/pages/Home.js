@@ -6,7 +6,7 @@ import Slider from "react-slick";
 // Import images
 import privacyImage from "../assets/images/privacy-image.webp";
 import fairnessImage from "../assets/images/fairness-image.webp";
-import member1 from "../assets/images/member1.JPG";
+import member1 from "../assets/images/member1.jpg";
 import member2 from "../assets/images/member2.jpeg";
 import member3 from "../assets/images/member3.jpg";
 import member4 from "../assets/images/member4.jpg";

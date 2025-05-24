@@ -10,6 +10,7 @@ import Results from "../pages/Results";
 import Reports from "../pages/Reports";
 import Tables from "../pages/Tables";
 import Profile from "../pages/Profile";
+import Services from "../pages/Services";
 import ForgotPassword from "../pages/ForgotPassword";
 
 const ProtectedRoute = ({ children }) => {
@@ -59,6 +60,12 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      <Route 
+      path="/services" 
+      element={
+      <ProtectedRoute>
+        <Services />
+        </ProtectedRoute>} />
       <Route
         path="/profile"
         element={
@@ -68,6 +75,7 @@ const AppRoutes = () => {
         }
       />
     </Routes>
+    
   );
 };
 

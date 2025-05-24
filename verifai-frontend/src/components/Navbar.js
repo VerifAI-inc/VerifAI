@@ -23,6 +23,11 @@ const Navbar = () => {
           </Link>
         </li>
         <li>
+          <Link to="/services" onClick={() => setMenuOpen(false)}>
+            Services
+          </Link>
+        </li>
+        <li>
           <Link to="/upload" onClick={() => setMenuOpen(false)}>
             Upload
           </Link>
