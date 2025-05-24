@@ -84,135 +84,124 @@ const Upload = () => {
   };
 
   return (
-    <div className="upload-container">
-      <section className="page-title-home">
-        <div className="container-home">
-          {/* <h2>VerifAI</h2> */}
-          <div className="page-tab-home">
+    <div className="upload-page">
+      <section className="upload-header">
+        <div className="upload-container">
+          <div className="upload-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>UPLOAD</span>
+            <span>Upload</span>
           </div>
         </div>
       </section>
 
-      <div className="upload-main">
-        <h1 className="upload-title">Upload Data</h1>
-        <div className="upload-card-wrapper">
-          <div className="upload-card">
-            <div className="upload-form-section">
-              <div className="upload-form-column">
-                <div className="upload-form-group">
-                  <label>Upload Model (.pkl file)</label>
-                  <input
-                    type="file"
-                    accept=".pkl"
-                    onChange={handleModelFileChange}
-                  />
-                </div>
-
-                {previewInfo && (
-                  <div className="model-preview">
-                    <h3>Uploaded Model</h3>
-                    {previewInfo.error ? (
-                      <p>Error: {previewInfo.error}</p>
-                    ) : (
-                      <>
-                        <p>Model Name: {previewInfo.model_type}</p>
-                        <p>DP Model Name: {previewInfo.dp_model_name}</p>
-                      </>
-                    )}
-                  </div>
-                )}
-
-                <div className="upload-form-group">
-                  <label>Label Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter label name"
-                    value={uploadLabelName}
-                    onChange={(e) => setUploadLabelName(e.target.value)}
-                  />
-                </div>
-
-                <div className="upload-form-group">
-                  <label>Protected Attribute Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter protected attribute"
-                    value={uploadProtectedAttribute}
-                    onChange={(e) => setUploadProtectedAttribute(e.target.value)}
-                  />
-                </div>
-
-                <div className="upload-form-group upload-mitigators-group">
-                  <label>Choose Mitigators (Multiple Select)</label>
-                  <div className="upload-mitigators-container">
-                    {["Synthetic Oversampling", "Rew", "Dir", "Eg"].map((mitigator) => (
-                      <label key={mitigator} className="upload-mitigator-option">
-                        <input
-                          type="checkbox"
-                          value={mitigator}
-                          checked={uploadMitigators.includes(mitigator)}
-                          onChange={handleMitigatorChange}
-                        />
-                        {mitigator}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="upload-form-column">
-                <div className="upload-form-group">
-                  <label>Upload Clean Dataset (.csv file)</label>
-                  <input
-                    type="file"
-                    accept=".csv"
-                    onChange={(e) => handleFileChange(e, setUploadDatasetFile)}
-                  />
-                </div>
-
-                <div className="upload-form-group">
-                  <label>Privileged Attribute</label>
-                  <input
-                    type="text"
-                    placeholder="Enter privileged attribute"
-                    value={uploadPrivilegedAttribute}
-                    onChange={(e) => setUploadPrivilegedAttribute(e.target.value)}
-                  />
-                </div>
-
-                <div className="upload-form-group">
-                  <label>Favorable Label Name</label>
-                  <input
-                    type="text"
-                    placeholder="Enter favorable label name"
-                    value={uploadFavorableLabel}
-                    onChange={(e) => setUploadFavorableLabel(e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* BUTTONS SECTION */}
-            <div style={{ display: "flex", justifyContent: "center", gap: "30px", marginTop: "30px" }}>
-              <button className="upload-button" onClick={handleSubmit}>
-                Start Training
-              </button>
-              <button className="upload-button" onClick={() => navigate("/results")}> 
-                See Results
-              </button>
-            </div>
-
-            {uploadResult && (
-              <div className="upload-result">
-                <p>{uploadResult.message}</p>
-              </div>
-            )}
+      <section className="upload-form">
+        <div className="upload-card">
+          <h2>Upload Model & Dataset</h2>
+          <div className="card-description">
+            <p>Use this form to upload your model and clean dataset for analysis.</p>
+            <p>Provide labels and attributes below, and select any fairness mitigators to apply.</p>
           </div>
+
+          <div className="form-row">
+            <div className="form-group half-width">
+              <label>Upload Model <span className="file-type">(.pkl file)</span></label>
+              <input type="file" accept=".pkl" onChange={handleModelFileChange} />
+              {uploadModelFile && <span className="filename">{uploadModelFile.name}</span>}
+            </div>
+
+            <div className="form-group half-width">
+              <label>Upload Clean Dataset <span className="file-type">(.csv file)</span></label>
+              <input type="file" accept=".csv" onChange={(e) => handleFileChange(e, setUploadDatasetFile)} />
+              {uploadDatasetFile && <span className="filename">{uploadDatasetFile.name}</span>}
+            </div>
+          </div>
+
+          {previewInfo && (
+            <div className="form-group">
+              <h3>Model Preview</h3>
+              {previewInfo.error ? (
+                <p className="error-message">Error: {previewInfo.error}</p>
+              ) : (
+                <>
+                  <p>Model Type: {previewInfo.model_type}</p>
+                  <p>DP Model: {previewInfo.dp_model_name}</p>
+                </>
+              )}
+            </div>
+          )}
+
+          <div className="form-row">
+            <div className="form-group half-width">
+              <label>Label Name</label>
+              <input
+                type="text"
+                placeholder="Enter label name"
+                value={uploadLabelName}
+                onChange={(e) => setUploadLabelName(e.target.value)}
+              />
+            </div>
+            <div className="form-group half-width">
+              <label>Favorable Label Name</label>
+              <input
+                type="text"
+                placeholder="e.g., 1"
+                value={uploadFavorableLabel}
+                onChange={(e) => setUploadFavorableLabel(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group half-width">
+              <label>Protected Attribute Name</label>
+              <input
+                type="text"
+                placeholder="e.g., gender"
+                value={uploadProtectedAttribute}
+                onChange={(e) => setUploadProtectedAttribute(e.target.value)}
+              />
+            </div>
+            <div className="form-group half-width">
+              <label>Privileged Attribute Name</label>
+              <input
+                type="text"
+                placeholder="e.g., male"
+                value={uploadPrivilegedAttribute}
+                onChange={(e) => setUploadPrivilegedAttribute(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="upload-mitigators-group">
+            <label>Choose Mitigators (Multiple Select)</label>
+            <div className="upload-mitigators-container">
+              {["Synthetic Oversampling", "Rew", "Dir", "Eg"].map((mitigator) => (
+                <label key={mitigator} className="upload-mitigator-option">
+                  <input
+                    type="checkbox"
+                    value={mitigator}
+                    checked={uploadMitigators.includes(mitigator)}
+                    onChange={handleMitigatorChange}
+                  />
+                  {mitigator}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="form-row" style={{ justifyContent: "center", gap: "20px" }}>
+            <button className="submit-btn" style={{ maxWidth: "260px" }} onClick={handleSubmit}>Start Training</button>
+            <button className="submit-btn" style={{ maxWidth: "260px" }} onClick={() => navigate("/results")}>See Results</button>
+          </div>
+
+          {uploadResult && (
+            <div className="form-group">
+              <p>{uploadResult.message}</p>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
     </div>
   );
 };
