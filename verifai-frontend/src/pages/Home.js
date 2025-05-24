@@ -6,8 +6,8 @@ import Slider from "react-slick";
 // Import images
 import privacyImage from "../assets/images/privacy-image.webp";
 import fairnessImage from "../assets/images/fairness-image.webp";
-import member1 from "../assets/images/member1.jpg";
-import member2 from "../assets/images/member2.jpeg";
+import member1 from "../assets/images/member1.jpeg";
+import member2 from "../assets/images/member2.jpg";
 import member3 from "../assets/images/member3.jpg";
 import member4 from "../assets/images/member4.jpg";
 
@@ -215,14 +215,35 @@ const Home = () => {
         <div className="container-home">
           <h2>MEET OUR TEAM</h2>
           <div className="row-home">
-            {[member1, member2, member3, member4].map((member, index) => (
+            {[
+              {
+                name: "ILHAMA NOVRUZOVA",
+                image: member1,
+                role: "CEO / CO-Founder"
+              },
+              {
+                name: "NATAVAN HASANOVA",
+                image: member2,
+                role: "Software Engineer / CO-Founder"
+              },
+              {
+                name: "KHALID MAMMADOV",
+                image: member3,
+                role: "Product Manager / CO-Founder"
+              },
+              {
+                name: "BAHRUZ GURBANLI",
+                image: member4,
+                role: "Software Engineer / CO-Founder"
+              }
+            ].map((member, index) => (
               <div className="team-box-home" key={index}>
                 <div className="team-img-home">
-                  <img src={member} alt={`Team Member ${index + 1}`} />
+                  <img src={member.image} alt={`Team Member ${index + 1}`} />
                 </div>
                 <div className="team-person-home">
-                  <p>{["NATAVAN HASANOVA", "ILHAMA NOVRUZOVA", "KHALID MAMMADOV", "BAHRUZ GURBANLI"][index]}</p>
-                  <span>Student</span>
+                  <p>{member.name}</p>
+                  <span>{member.role}</span>
                 </div>
                 <div className="team-person-social-home">
                   <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-instagram"></i></a>
@@ -235,6 +256,7 @@ const Home = () => {
           </div>
         </div>
       </section>
+
     </div>
   );
 };
