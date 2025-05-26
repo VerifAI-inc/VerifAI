@@ -1,5 +1,3 @@
-// src/pages/Results.js
-
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaDownload, FaArrowRight, FaArrowLeft } from "react-icons/fa";
@@ -21,7 +19,6 @@ import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import { useRef } from "react";
 
-// 🔵 Move epsilonsNeeded OUTSIDE to avoid eslint warning
 const epsilonsNeeded = ["0.1", "1", "5", "10"];
 
 const Results = () => {
@@ -30,7 +27,7 @@ const Results = () => {
   const [allResults, setAllResults] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const graphContainerRef = useRef(null); // 📌 Ref for the graphs
+  const graphContainerRef = useRef(null); 
 
   const handleDownloadResults = async () => {
     if (!graphContainerRef.current) {
@@ -58,7 +55,7 @@ const Results = () => {
           return response.json();
         })
         .then((data) => {
-          console.log("✅ Results from backend:", data);
+          console.log("Results from backend:", data);
           setAllResults(data);
 
           const allAvailable = epsilonsNeeded.every((eps) => {
@@ -72,7 +69,7 @@ const Results = () => {
           }
         })
         .catch((error) => {
-          console.error("❌ Error fetching results:", error);
+          console.error("Error fetching results:", error);
         });
     }, 3000);
 

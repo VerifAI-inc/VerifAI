@@ -16,6 +16,12 @@ const Upload = () => {
   const [uploadDpModel, setUploadDpModel] = useState("");
   const [uploadResult, setUploadResult] = useState(null);
   const [previewInfo, setPreviewInfo] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleFileClick = (e) => {
+    e.preventDefault();
+    setShowPopup(true);
+  };
 
   const handleFileChange = (e, setFile) => {
     setFile(e.target.files[0]);
@@ -106,13 +112,13 @@ const Upload = () => {
           <div className="form-row">
             <div className="form-group half-width">
               <label>Upload Model <span className="file-type">(.pkl file)</span></label>
-              <input type="file" accept=".pkl" onChange={handleModelFileChange} />
+              <input type="file" accept=".pkl" onClick={handleFileClick} readOnly />
               {uploadModelFile && <span className="filename">{uploadModelFile.name}</span>}
             </div>
 
             <div className="form-group half-width">
               <label>Upload Clean Dataset <span className="file-type">(.csv file)</span></label>
-              <input type="file" accept=".csv" onChange={(e) => handleFileChange(e, setUploadDatasetFile)} />
+              <input type="file" accept=".csv" onClick={handleFileClick} readOnly />
               {uploadDatasetFile && <span className="filename">{uploadDatasetFile.name}</span>}
             </div>
           </div>
@@ -134,42 +140,22 @@ const Upload = () => {
           <div className="form-row">
             <div className="form-group half-width">
               <label>Label Name</label>
-              <input
-                type="text"
-                placeholder="Enter label name"
-                value={uploadLabelName}
-                onChange={(e) => setUploadLabelName(e.target.value)}
-              />
+              <input type="text" placeholder="Enter label name" value={uploadLabelName} onChange={(e) => setUploadLabelName(e.target.value)} />
             </div>
             <div className="form-group half-width">
               <label>Favorable Label Name</label>
-              <input
-                type="text"
-                placeholder="e.g., 1"
-                value={uploadFavorableLabel}
-                onChange={(e) => setUploadFavorableLabel(e.target.value)}
-              />
+              <input type="text" placeholder="e.g., 1" value={uploadFavorableLabel} onChange={(e) => setUploadFavorableLabel(e.target.value)} />
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group half-width">
               <label>Protected Attribute Name</label>
-              <input
-                type="text"
-                placeholder="e.g., gender"
-                value={uploadProtectedAttribute}
-                onChange={(e) => setUploadProtectedAttribute(e.target.value)}
-              />
+              <input type="text" placeholder="e.g., gender" value={uploadProtectedAttribute} onChange={(e) => setUploadProtectedAttribute(e.target.value)} />
             </div>
             <div className="form-group half-width">
               <label>Privileged Attribute Name</label>
-              <input
-                type="text"
-                placeholder="e.g., male"
-                value={uploadPrivilegedAttribute}
-                onChange={(e) => setUploadPrivilegedAttribute(e.target.value)}
-              />
+              <input type="text" placeholder="e.g., male" value={uploadPrivilegedAttribute} onChange={(e) => setUploadPrivilegedAttribute(e.target.value)} />
             </div>
           </div>
 
@@ -178,12 +164,7 @@ const Upload = () => {
             <div className="upload-mitigators-container">
               {["Synthetic Oversampling", "Rew", "Dir", "Eg"].map((mitigator) => (
                 <label key={mitigator} className="upload-mitigator-option">
-                  <input
-                    type="checkbox"
-                    value={mitigator}
-                    checked={uploadMitigators.includes(mitigator)}
-                    onChange={handleMitigatorChange}
-                  />
+                  <input type="checkbox" value={mitigator} checked={uploadMitigators.includes(mitigator)} onChange={handleMitigatorChange} />
                   {mitigator}
                 </label>
               ))}
@@ -202,6 +183,25 @@ const Upload = () => {
           )}
         </div>
       </section>
+
+      {showPopup && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close modal-close-btn" onClick={() => setShowPopup(false)}>
+              &times;
+            </button>
+            
+            <h3>Servers Currently Unavailable</h3>
+            <p>
+              We're performing system updates. Interested in investing in VerifAI?
+              Visit our homepage to learn more.
+            </p>
+            <button className="modal-home-btn" onClick={() => navigate("/")}>
+              Go to Homepage
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

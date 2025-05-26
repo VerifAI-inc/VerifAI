@@ -1,18 +1,26 @@
-/* Background and General Layout */
 .results-container {
-    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center fixed;
-    margin-bottom: -80px;
-    background-size: cover;
-    font-family: 'Poppins', sans-serif;
+  width: 100%;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.page-title-home {
+  background-image: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  padding: 80px 20px;
+  color: white;
+  text-align: center;
+  height: 170px;
 }
 
 .results-main-content {
     background: white;
     padding: 50px 80px;
     margin-top: -50px;
+    margin-bottom: -80px;
 }
 
-/* Header */
 .results-header {
     text-align: center;
     margin-bottom: 20px;
@@ -31,7 +39,6 @@
     color: #333;
 }
 
-/* Button Group */
 .results-button-group {
     display: flex;
     justify-content: center;
@@ -61,7 +68,6 @@
     background: linear-gradient(to right, #0056b3, #004085);
 }
 
-/* Slider */
 .slider-container {
     margin-bottom: 30px;
 }
@@ -91,7 +97,6 @@
     transition: transform 0.2s ease-in-out;
 }
 
-/* Graphs Section */
 .results-graphs-wrapper {
     width: 100%;
     display: flex;
@@ -110,7 +115,7 @@
 }
 
 .graph-card {
-    width: 90%;  /* 👈 make each graph wider inside column */
+    width: 90%; 
     background: rgba(79, 172, 254, 0.1);
     border-radius: 10px;
     padding: 20px;
@@ -123,7 +128,6 @@
     margin-bottom: 10px;
 }
 
-/* Loading */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -155,7 +159,6 @@
     }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .graphs-container {
         flex-direction: column;
@@ -189,4 +192,3 @@
     justify-content: center;
     gap: 10px;
   }
-  

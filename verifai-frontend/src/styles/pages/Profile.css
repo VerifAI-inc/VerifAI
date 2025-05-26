@@ -1,13 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
 
 .profile-header {
-    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center fixed;
-    background-size: cover;
-    height: 200px;
-    text-align: center;
-    padding-top: 120px;
+    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
+    padding: 80px 20px;
     color: white;
-    position: relative;
+    text-align: center;
+    height: 135px;
 }
 
 .profile-page {

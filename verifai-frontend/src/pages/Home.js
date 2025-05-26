@@ -219,22 +219,22 @@ const Home = () => {
               {
                 name: "ILHAMA NOVRUZOVA",
                 image: member1,
-                role: "CEO / CO-Founder"
+                role: "CO-Founder"
               },
               {
                 name: "NATAVAN HASANOVA",
                 image: member2,
-                role: "Software Engineer / CO-Founder"
+                role: "CO-Founder"
               },
               {
                 name: "KHALID MAMMADOV",
                 image: member3,
-                role: "Product Manager / CO-Founder"
+                role: "CO-Founder"
               },
               {
                 name: "BAHRUZ GURBANLI",
                 image: member4,
-                role: "Software Engineer / CO-Founder"
+                role: "CO-Founder"
               }
             ].map((member, index) => (
               <div className="team-box-home" key={index}>
