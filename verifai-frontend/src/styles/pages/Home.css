@@ -258,46 +258,59 @@
     color: black;
 }
 
-.client-feedback-home {
+.why-now-home {
     background-color: #f9f9f9;
     padding: 60px 0;
     text-align: center;
 }
 
-.client-feedback-home h2 {
+.why-now-home h2 {
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 40px;
     color: #1b3b6f;
+    text-transform: uppercase;
 }
 
-.feedback-box-home {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    margin: auto;
-    text-align: center;
+.why-now-box-home {
+  background: radial-gradient(
+      circle at top left,
+      rgba(79, 172, 254, 0.25),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(79, 172, 254, 0.25),
+      transparent 50%
+    ),
+    #ffffff;
+  padding: 30px 25px;
+  border-radius: 16px;
+  width: 80%;
+  margin: auto;
+  text-align: center;
+
+  box-shadow: none;
+  overflow: hidden;
+  min-height: 155px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.feedback-text-home {
-    font-size: 18px;
+.why-now-quote-home {
+    font-size: 20px;
     color: #444;
     font-style: italic;
     margin-bottom: 15px;
+    line-height: 1.6;
 }
 
-.feedback-name-home {
-    font-size: 20px;
+.why-now-author-home {
+    font-size: 18px;
     font-weight: bold;
     color: #6B0000;
-    margin-bottom: 5px;
-}
-
-.feedback-role-home {
-    font-size: 16px;
-    color: #555;
+    margin-top: 5px;
 }
 
 .home-slick-prev-custom, .home-slick-next-custom {
@@ -392,4 +405,5 @@
   margin-right: 10px;
   color: #1b3b6f;
   font-size: 18px;
-}
+} 
+
