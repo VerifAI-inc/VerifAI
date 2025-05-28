@@ -1,5 +1,3 @@
-// src/pages/Reports.js
-
 import React, { useState } from "react";
 import "../styles/pages/Reports.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -80,13 +78,12 @@ Model Evaluation Results:
     const doc = new jsPDF();
     const marginLeft = 10;
     const marginRight = 10;
-    // const maxWidth = 180; // 210 (A4 width) - 2*15 margins
   
     doc.setFontSize(18);
     doc.setFont("helvetica", "bold");
     doc.text("VerifAI Evaluation Report", marginLeft, 20);
   
-    let y = 30; // vertical starting position
+    let y = 30;
     const lineSpacing = 8;
   
     const cleanedText = cleanUpReportText(reportText);
@@ -96,7 +93,7 @@ Model Evaluation Results:
     doc.setFont("helvetica", "normal");
   
     lines.forEach((line) => {
-      if (y > 270) {  // Page end check
+      if (y > 270) { 
         doc.addPage();
         y = 20;
       }
@@ -169,10 +166,8 @@ Model Evaluation Results:
           </h2>
         );
       } else if (line.trim() === "") {
-        // Blank line
         return <br key={index} />;
       } else {
-        // Paragraph — handle bold
         const parts = line.split(/(\*\*.*?\*\*)/g); 
         return (
           <p
@@ -220,12 +215,11 @@ Model Evaluation Results:
   return (
     <div className="reports-page">
       <section className="reports-header">
-        <div className="container-reports">
-          {/* <h2>VERIFAI</h2> */}
-          <div className="page-tab-reports">
+        <div className="reports-container">
+          <div className="reports-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>REPORTS</span>
+            <span>Reports</span>
           </div>
         </div>
       </section>

@@ -1,5 +1,3 @@
-// src/pages/Tables.js
-
 import React, { useState, useEffect } from "react";
 import "../styles/pages/Tables.css";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,12 +20,12 @@ const Tables = () => {
         return response.json();
       })
       .then((data) => {
-        console.log("✅ Results fetched for tables:", data);
+        console.log("Results fetched for tables:", data);
         setAllResults(data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("❌ Error fetching results:", error);
+        console.error("Error fetching results:", error);
         setLoading(false);
       });
   }, []);
@@ -105,12 +103,11 @@ const Tables = () => {
     <div className="tables-page">
       {/* Header */}
       <section className="tables-header">
-        <div className="container-tables">
-          {/* <h2>VERIFAI</h2> */}
-          <div className="page-tab-tables">
+        <div className="tables-container">
+          <div className="tables-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>TABLES</span>
+            <span>Tables</span>
           </div>
         </div>
       </section>

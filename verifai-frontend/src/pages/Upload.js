@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/pages/Upload.css";
 import API_BASE_URL from "../config";
@@ -18,10 +18,10 @@ const Upload = () => {
   const [previewInfo, setPreviewInfo] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleFileClick = (e) => {
-    e.preventDefault();
+  // Show popup once when component mounts
+  useEffect(() => {
     setShowPopup(true);
-  };
+  }, []);
 
   const handleFileChange = (e, setFile) => {
     setFile(e.target.files[0]);
@@ -112,13 +112,13 @@ const Upload = () => {
           <div className="form-row">
             <div className="form-group half-width">
               <label>Upload Model <span className="file-type">(.pkl file)</span></label>
-              <input type="file" accept=".pkl" onClick={handleFileClick} readOnly />
+              <input type="file" accept=".pkl" onChange={(e) => handleFileChange(e, setUploadModelFile)} />
               {uploadModelFile && <span className="filename">{uploadModelFile.name}</span>}
             </div>
 
             <div className="form-group half-width">
               <label>Upload Clean Dataset <span className="file-type">(.csv file)</span></label>
-              <input type="file" accept=".csv" onClick={handleFileClick} readOnly />
+              <input type="file" accept=".csv" onChange={(e) => handleFileChange(e, setUploadDatasetFile)} />
               {uploadDatasetFile && <span className="filename">{uploadDatasetFile.name}</span>}
             </div>
           </div>
@@ -190,15 +190,12 @@ const Upload = () => {
             <button className="modal-close modal-close-btn" onClick={() => setShowPopup(false)}>
               &times;
             </button>
-            
             <h3>Servers Currently Unavailable</h3>
             <p>
               We're performing system updates. Interested in investing in VerifAI?
               Visit our homepage to learn more.
             </p>
-            <button className="modal-home-btn" onClick={() => navigate("/")}>
-              Go to Homepage
-            </button>
+            <button className="modal-home-btn" onClick={() => navigate("/")}>Go to Homepage</button>
           </div>
         </div>
       )}

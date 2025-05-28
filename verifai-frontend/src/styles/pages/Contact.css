@@ -1,22 +1,24 @@
-@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
-
 .contact-header {
-    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
-    padding: 80px 20px;
-    color: white;
-    text-align: center;
-    height: 135px;
+  background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
+  padding: 80px 20px;
+  color: white;
+  text-align: center;
+  height: 135px;
 }
 
-.contact-page {
-    margin-bottom: -80px;
+.contact-container {
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.contact-header h2 {
-    font-size: 36px;
-    margin-top: 5px;
-    font-weight: bold;
-    text-transform: uppercase;
+.contact-breadcrumb {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 45px;
+}
+
+.contact-breadcrumb i {
+  margin: 0 10px;
 }
 
 .page-tab-contact {

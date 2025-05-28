@@ -6,11 +6,19 @@
     height: 135px;
 }
 
-.table-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+.tables-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.tables-breadcrumb {
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 45px;
+}
+
+.tables-breadcrumb i {
+    margin: 0 10px;
 }
 
 .tables-page {

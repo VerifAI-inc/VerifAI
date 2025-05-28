@@ -1,22 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Vollkorn:wght@400;700&display=swap');
-
 .reports-header {
-    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
-    padding: 80px 20px;
-    color: white;
-    text-align: center;
-    height: 135px;
+  background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
+  padding: 80px 20px;
+  color: white;
+  text-align: center;
+  height: 135px;
+}
+
+.reports-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.reports-breadcrumb {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 45px;
+}
+
+.reports-breadcrumb i {
+  margin: 0 10px;
 }
 
 .reports-page {
     margin-bottom: -80px;
-}
-
-.reports-header h2 {
-    font-size: 36px;
-    font-weight: bold;
-    margin-top: 5px;
-    text-transform: uppercase;
 }
 
 .page-tab-reports {

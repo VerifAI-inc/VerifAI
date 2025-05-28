@@ -22,19 +22,16 @@ const Contact = () => {
 
   return (
     <div className="contact-page">
-      {/* Background Section (Same as Home Page) */}
       <section className="contact-header">
-        <div className="container-contact">
-          {/* <h2>VERIFAI</h2> */}
-          <div className="page-tab-contact">
+        <div className="contact-container">
+          <div className="contact-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>CONTACT</span>
+            <span>Contact</span>
           </div>
         </div>
       </section>
 
-      {/* White Space & Contact Section */}
       <section className="contact-section">
         <div className="contact-form-container">
           <h1 className="contact-title">Contact Us</h1>
