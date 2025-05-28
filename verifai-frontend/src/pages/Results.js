@@ -26,6 +26,7 @@ const Results = () => {
   const [epsilon, setEpsilon] = useState(1.0);
   const [allResults, setAllResults] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(true);
 
   const graphContainerRef = useRef(null); 
 
@@ -254,6 +255,21 @@ const Results = () => {
 
   return (
     <div className="results-container">
+      {showPopup && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <button className="modal-close-btn" onClick={() => setShowPopup(false)}>
+              &times;
+            </button>
+            <h3>Servers Currently Unavailable</h3>
+            <p>
+              We're performing system updates. Interested in investing in VerifAI?
+              Visit our homepage to learn more.
+            </p>
+            <button className="modal-home-btn" onClick={() => navigate("/")}>Go to Homepage</button>
+          </div>
+        </div>
+      )}
       <section className="page-title-home">
         <div className="container-home">
           {/* <h2>VerifAI</h2> */}
