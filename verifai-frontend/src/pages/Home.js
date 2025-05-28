@@ -228,22 +228,30 @@ const Home = () => {
               {
                 name: "ILHAMA NOVRUZOVA",
                 image: member1,
-                role: "CO-Founder"
+                role: "CO-Founder",
+                linkedin: "https://www.linkedin.com/in/ilhamanovruzova/", 
+                github: "https://github.com/inovruzova"        
               },
               {
                 name: "NATAVAN HASANOVA",
                 image: member2,
-                role: "CO-Founder"
+                role: "CO-Founder",
+                linkedin: "https://www.linkedin.com/in/hasanovanatavan", 
+                github: "https://github.com/nqasanova"          
               },
               {
                 name: "KHALID MAMMADOV",
                 image: member3,
-                role: "CO-Founder"
+                role: "CO-Founder",
+                linkedin: "https://www.linkedin.com/in/khalid-mammad", 
+                github: "https://github.com/khaleed-mammad"         
               },
               {
                 name: "BAHRUZ GURBANLI",
                 image: member4,
-                role: "CO-Founder"
+                role: "CO-Founder",
+                linkedin: "https://www.linkedin.com/in/behruzgurbanli", 
+                github: "https://github.com/behruzgurbanli"         
               }
             ].map((member, index) => (
               <div className="team-box-home" key={index}>
@@ -255,10 +263,12 @@ const Home = () => {
                   <span>{member.role}</span>
                 </div>
                 <div className="team-person-social-home">
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-instagram"></i></a>
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-facebook-f"></i></a>
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-linkedin-in"></i></a>
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-github"></i></a>
+                  <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
+                    <i className="fa-brands fa-linkedin-in"></i>
+                  </a>
+                  <a href={member.github} target="_blank" rel="noopener noreferrer">
+                    <i className="fa-brands fa-github"></i>
+                  </a>
                 </div>
               </div>
             ))}

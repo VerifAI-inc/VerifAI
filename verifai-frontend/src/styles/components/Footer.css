@@ -1,19 +1,18 @@
 .footer {
-    background: rgba(10, 25, 47, 0.1);
-    color: #0088ff; 
-    padding: 40px 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border-top: 2px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 25, 47, 0.1);
+  color: #0088ff;
+  padding: 40px 50px 0 50px; /* remove bottom padding */
+  text-align: center;
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1300px;
+  flex-wrap: wrap;
+  margin: 0 auto;
 }
 
 .footer-left, .footer-center, .footer-right {
@@ -122,6 +121,88 @@
     color: #00d9ff;
 }
 
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1300px;
+  flex-wrap: wrap;
+}
+
+.footer-left,
+.footer-center,
+.footer-right,
+.footer-contact {
+  flex: 1;
+  min-width: 220px;
+  padding: 10px;
+}
+
+.footer-contact h3 {
+  font-size: 1.5rem;
+  margin-top: 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-social-inline {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center horizontally */
+  gap: 8px;
+}
+
+.footer-social-inline span {
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.footer-social-inline a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.footer-social-inline a:hover {
+  color: #00d9ff;
+  text-decoration: underline;
+}
+
+.footer-social-inline .icon {
+  font-size: 1rem;
+}
+
+.footer-bottom {
+  width: 100%;
+  background: rgba(10, 25, 47, 0.2);
+  padding: 15px 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: white;
+  margin-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-social-icons {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  justify-content: center; /* center horizontally */
+  align-items: center;
+}
+
+.footer-social-icons a {
+  color: white;
+  font-size: 1.2rem;
+  transition: color 0.3s ease-in-out;
+}
+
+.footer-social-icons a:hover {
+  color: #00d9ff;
+}
+
 @media (max-width: 768px) {
     .footer-container {
         flex-direction: column;
@@ -146,3 +227,4 @@
         width: 100%;
     }
 }
+

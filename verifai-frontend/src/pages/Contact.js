@@ -35,6 +35,11 @@ const Contact = () => {
       <section className="contact-section">
         <div className="contact-form-container">
           <h1 className="contact-title">Contact Us</h1>
+          <div className="contact-links">
+            <p>Email: <a href="mailto:info.verifai@gmail.com">info.verifai@gmail.com</a></p>
+            <p>Follow us: <a href="https://www.linkedin.com/company/verif-ai/" target="_blank" rel="noopener noreferrer">LinkedIn</a> | <a href="https://www.instagram.com/verifai.tech" target="_blank" rel="noopener noreferrer">Instagram</a>
+            </p>
+          </div>
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="contact-form-group">
               <label>Name <span className="contact-required">*</span></label>
