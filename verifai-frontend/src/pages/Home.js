@@ -6,7 +6,7 @@ import Slider from "react-slick";
 // Import images
 import privacyImage from "../assets/images/privacy-image.webp";
 import fairnessImage from "../assets/images/fairness-image.webp";
-import member1 from "../assets/images/member1.jpeg";
+import member1 from "../assets/images/member1.jpg";
 import member2 from "../assets/images/member2.jpg";
 import member3 from "../assets/images/member3.jpg";
 import member4 from "../assets/images/member4.jpg";
@@ -28,32 +28,56 @@ const CustomNextArrow = (props) => {
 };
 
 const Home = () => {
-  const feedbacks = [
+  const quotes = [
     {
       id: 1,
-      name: "John Doe",
-      role: "Business Owner",
-      feedback: "VerifAI helped us identify biases in our AI model and improved our decision-making process significantly.",
+      name: "Max Tegmark",
+      role: "Physicist and AI Researcher",
+      // feedback: "The only industry that is completely unregulated right now, which has no safety standards, is AI.",
+      feedback: (
+        <>
+          The only industry that is completely unregulated right now,<br />
+          which has no safety standards, is AI.
+        </>
+      ),
     },
     {
       id: 2,
-      name: "Jane Smith",
-      role: "AI Researcher",
-      feedback: "A fantastic tool that ensures fairness in machine learning models. Highly recommended!",
+      name: "Amazon",
+      role: "E-commerce company",
+      feedback: (
+        <>
+          From the outset, we have prioritized responsible AI innovation<br />
+          by embedding safety, fairness, robustness, security, and privacy<br />
+          into our development processes.
+        </>
+      ),
     },
     {
       id: 3,
-      name: "David Wilson",
-      role: "Software Engineer",
-      feedback: "With VerifAI, we improved the accuracy of our predictions while maintaining ethical AI standards.",
+      name: "Timnit Gebru",
+      role: "AI Ethics Researcher",
+      // feedback: "Fairness is not just a feature—it must be a foundation of every AI system we build.",
+      feedback: (
+        <>
+          Fairness is not just a feature—<br />
+          it must be a foundation of every AI system we build.
+        </>
+      ),
     },
     {
       id: 4,
-      name: "Sophia Martinez",
-      role: "Data Scientist",
-      feedback: "An essential tool for anyone working with AI fairness and privacy. Easy to use and insightful!",
+      name: "Bruce Schneier",
+      role: "Security Technologist",
+      feedback: (
+        <>
+          As we automate and analyze more, we must secure more.<br />
+          An AI system without security is a risk multiplier.
+        </>
+      ),
     },
   ];
+
 
   // Slider settings
   const settings = {
@@ -182,25 +206,25 @@ const Home = () => {
       {/* Page Title Before Client Feedback Section */}
       <section className="page-title-team">
         <div className="container-home">
-          <h2>Client Feedback</h2>
+          <h2>Why Now?</h2>
           <div className="page-tab-home">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>CLIENT FEEDBACK</span>
+            <span>WHY NOW</span>
           </div>
         </div>
       </section>
 
-      {/* Client Feedback Section */}
-      <section className="client-feedback-home">
+      {/* Why Now Quote Section */}
+      <section className="why-now-home">
         <div className="container-home">
-          <h2>WHAT OUR CLIENTS SAY</h2>
+          <h2>WHY NOW?</h2>
           <Slider {...settings}>
-            {feedbacks.map((feedback) => (
-              <div className="feedback-box-home" key={feedback.id}>
-                <p className="feedback-text-home">"{feedback.feedback}"</p>
-                <h3 className="feedback-name-home">{feedback.name}</h3>
-                <span className="feedback-role-home">{feedback.role}</span>
+            {quotes.map((item) => (
+              <div className="why-now-box-home" key={item.id}>
+                <p className="why-now-text-home">"{item.feedback}"</p>
+                <h3 className="why-now-name-home">{item.name}</h3>
+                <span className="why-now-role-home">{item.role}</span>
               </div>
             ))}
           </Slider>
@@ -228,22 +252,54 @@ const Home = () => {
               {
                 name: "ILHAMA NOVRUZOVA",
                 image: member1,
-                role: "CO-Founder"
+                role: (
+                  <>
+                    CO-Founder<br />Chief Executive Officer
+                  </>
+                ),
+                socials: {
+                  linkedin: "https://www.linkedin.com/in/ilhamanovruzova/",
+                  github: "https://github.com/inovruzova"
+                }
               },
               {
                 name: "NATAVAN HASANOVA",
                 image: member2,
-                role: "CO-Founder"
+                role: (
+                  <>
+                    CO-Founder<br />Software Engineer
+                  </>
+                ), 
+                socials: {
+                  linkedin: "https://www.linkedin.com/in/hasanovanatavan/",
+                  github: "https://github.com/nqasanova"
+                }
               },
               {
                 name: "KHALID MAMMADOV",
                 image: member3,
-                role: "CO-Founder"
+                role: (
+                  <>
+                    CO-Founder<br />Product Manager
+                  </>
+                ),                 
+                socials: {
+                  linkedin: "https://www.linkedin.com/in/khalid-mammad/",
+                  github: "https://github.com/khaleed-mammad"
+                }
               },
               {
                 name: "BAHRUZ GURBANLI",
                 image: member4,
-                role: "CO-Founder"
+                role: (
+                  <>
+                    CO-Founder<br />Software Engineer
+                  </>
+                ),                 
+                socials: {
+                  linkedin: "https://www.linkedin.com/in/behruzgurbanli/",
+                  github: "https://github.com/behruzgurbanli"
+                }
               }
             ].map((member, index) => (
               <div className="team-box-home" key={index}>
@@ -255,10 +311,12 @@ const Home = () => {
                   <span>{member.role}</span>
                 </div>
                 <div className="team-person-social-home">
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-instagram"></i></a>
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-facebook-f"></i></a>
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-linkedin-in"></i></a>
-                  <a href="https://instagram.com/verifai.tech"><i className="fa-brands fa-github"></i></a>
+                  <a href={member.socials.linkedin} target="_blank" rel="noopener noreferrer">
+                    <i className="fa-brands fa-linkedin-in"></i>
+                  </a>
+                  <a href={member.socials.github} target="_blank" rel="noopener noreferrer">
+                    <i className="fa-brands fa-github"></i>
+                  </a>
                 </div>
               </div>
             ))}
