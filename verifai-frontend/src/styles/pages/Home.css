@@ -7,7 +7,7 @@
     margin-bottom: -80px;
 }
 
-.page-title-home {
+.home-header {
   background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
   padding: 80px 20px;
   color: white;
@@ -15,11 +15,19 @@
   height: 135px;
 }
 
-.page-title-home h2 {
-    font-size: 36px;
-    margin-top: -25px;
-    font-weight: 600;
-    text-transform: uppercase;
+.home-second-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.home-breadcrumb {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 45px;
+}
+
+.home-breadcrumb i {
+  margin: 0 10px;
 }
 
 .page-tab-home {
@@ -359,4 +367,29 @@
     .team-box-home {
         width: 100%; 
     }
+}
+
+.feature-point {
+  display: flex;
+  align-items: center;
+  background: #f3f9ff;
+  border-left: 4px solid #1b3b6f;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.feature-point:hover {
+  background: #e8f1ff;
+}
+
+.feature-point i {
+  margin-right: 10px;
+  color: #1b3b6f;
+  font-size: 18px;
 }

@@ -11,6 +11,11 @@ import member2 from "../assets/images/member2.jpg";
 import member3 from "../assets/images/member3.jpg";
 import member4 from "../assets/images/member4.jpg";
 
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+/>
+
 // Custom arrow components
 const CustomPrevArrow = (props) => {
   const { onClick } = props;
@@ -66,13 +71,12 @@ const Home = () => {
   return (
     <div className="home-container">
       {/* Page Title Before About  Section */}
-      <section className="page-title-home">
-        <div className="container-home">
-          {/* <h2>VerifAI</h2> */}
-          <div className="page-tab-home">
+      <section className="home-header">
+        <div className="home-second-container">
+          <div className="home-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>ABOUT US</span>
+            <span>About Us</span>
           </div>
         </div>
       </section>
@@ -84,9 +88,17 @@ const Home = () => {
             <div className="col-6-home">
               <div className="about-main-left-home">
                 <h2>About VerifAI</h2>
-                <p>
-                  At VerifAI, privacy is a core concern. Our AI ensures that data remains secure and
-                  anonymized while evaluating fairness and bias in models.
+                <p className="feature-point">
+                  <i className="fas fa-check-circle"></i> No-Code Platform
+                </p>
+                <p className="feature-point">
+                  <i className="fas fa-users"></i> Suitable for Researchers & Enterprises
+                </p>
+                <p className="feature-point">
+                  <i className="fas fa-shield-alt"></i> Fairness, Privacy & Security Focused
+                </p>
+                <p className="feature-point">
+                  <i className="fas fa-brain"></i> No Technical Expertise Needed
                 </p>
               </div>
             </div>
@@ -108,20 +120,17 @@ const Home = () => {
             <div className="col-6-home">
               <div className="about-main-right2-home">
                 <h2>Why VerifAI?</h2>
-                <p>
-                    <strong>Automated ML Fairness & Privacy Evaluation:</strong> Enables businesses, researchers, and developers to analyze how fair and privacy-safe their ML models are.  
+                <p className="feature-point">
+                  <i className="fas fa-robot"></i> Automated ML Fairness, Privacy & Security
                 </p>
-                <p>
-                    <strong>Trade-off Analysis:</strong> Helps users adjust epsilon values interactively to find the right balance between privacy, fairness, and accuracy.  
+                <p className="feature-point">
+                  <i className="fas fa-balance-scale"></i> Trade-off Analysis
                 </p>
-                <p>
-                    <strong>Real-World Compliance:</strong> Supports fairness & privacy regulations (GDPR, AI Ethics Guidelines).  
+                <p className="feature-point">
+                  <i className="fas fa-gavel"></i> Real-World Compliances
                 </p>
-                <p>
-                    <strong>Visualization & Reporting:</strong> Generates detailed interactive graphs, tables, and reports for stakeholders.  
-                </p>
-                <p>
-                    <strong>No Deep ML Knowledge Required:</strong> Makes privacy & fairness evaluation accessible to non-experts.  
+                <p className="feature-point">
+                  <i className="fas fa-chart-line"></i> Visualization & Reports
                 </p>
               </div>
             </div>

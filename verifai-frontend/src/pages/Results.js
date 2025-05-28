@@ -270,10 +270,11 @@ const Results = () => {
           </div>
         </div>
       )}
-      <section className="page-title-home">
-        <div className="container-home">
-          {/* <h2>VerifAI</h2> */}
-          <div className="page-tab-home">
+
+      {/* Header Area */}
+      <section className="results-header-section">
+        <div className="results-header-container">
+          <div className="results-header-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
             <span>RESULTS</span>
