@@ -204,27 +204,110 @@
 }
 
 @media (max-width: 768px) {
-    .footer-container {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .footer-left, .footer-center, .footer-right {
-        margin-bottom: 20px;
-    }
-
-    .top-links, .bottom-links {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .newsletter-form {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .newsletter-form input {
-        width: 100%;
-    }
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, auto);
+  gap: 8px;
+  padding: 10px;
+  margin: 0 auto;
+  width: 100%;
+  align-items: start;         
+  justify-items: center;     
+  text-align: center;
+  box-sizing: border-box;
 }
 
+
+  .footer-left,
+  .footer-center,
+  .footer-right,
+  .footer-contact {
+    width: 100%;
+    max-width: 140px;
+    font-size: 0.6rem;
+    padding: 8px 0; /* Add vertical spacing */
+    box-sizing: border-box;
+  }
+
+  .footer-left h2,
+  .footer-center h3,
+  .footer-right h3,
+  .footer-contact h3 {
+    font-size: 0.75rem;
+    margin-bottom: 4px;
+  }
+
+.footer-tagline {
+  font-size: 0.6rem;
+  line-height: 1.1;
+  padding: 0 4px;
+  max-width: 190px; 
+  word-break: break-word; 
+}
+
+  .quick-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .top-links,
+  .bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .quick-links ul li {
+    margin: 0;
+  }
+
+  .quick-links ul li a {
+    font-size: 0.6rem;
+    padding: 0 3px;
+  }
+
+  .newsletter-form {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .newsletter-form input {
+    width: 60%;
+    font-size: 0.6rem;
+    padding: 5px 6px;
+  }
+
+  .newsletter-form button {
+    font-size: 0.6rem;
+    padding: 5px 8px;
+  }
+
+  .footer-social-inline,
+  .footer-social-icons {
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.6rem;
+  }
+
+  .footer-social-icons a {
+    font-size: 0.9rem;
+  }
+
+  .footer-bottom {
+    font-size: 0.6rem;
+    margin-top: 10px;
+  }
+
+  .footer {
+    overflow-x: hidden;
+  }
+}

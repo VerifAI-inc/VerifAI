@@ -339,49 +339,6 @@
     margin-left: 1120px;
 }
 
-@media (max-width: 768px) {
-    .feedback-box-home {
-        width: 90%;
-    }
-
-    .home-slick-prev-custom {
-        left: -30px;
-    }
-
-    .home-slick-next-custom {
-        right: -30px;
-    }
-
-    .investment-invite h2 {
-        font-size: 24px;
-    }
-
-    .investment-invite p {
-        font-size: 16px;
-        max-width: 90%;
-    }
-    .video-frame {
-        width: 98%;
-        height: 300px;
-    }
-}
-
-@media (max-width: 1024px) {
-    .row-home {
-        flex-wrap: wrap;
-    }
-    
-    .team-box-home {
-        width: 45%; 
-    }
-}
-
-@media (max-width: 768px) {
-    .team-box-home {
-        width: 100%; 
-    }
-}
-
 .feature-point {
   display: flex;
   align-items: center;
@@ -407,3 +364,151 @@
   font-size: 18px;
 } 
 
+/* ===================== Responsive Styling ===================== */
+@media (max-width: 768px) {
+  .home-header {
+    padding: 60px 10px;
+    height: auto;
+  }
+
+  .home-breadcrumb {
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .page-tab-home {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .row-home {
+    flex-direction: column;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .col-6-home,
+  .team-box-home {
+    width: 90%;
+  }
+
+  .about-main-left-home,
+  .about-main-right-home,
+  .about-main-left2-home,
+  .about-main-right2-home {
+    padding: 10px;
+    text-align: center;
+  }
+
+  .about-main-left-home h2,
+  .about-main-right2-home h2,
+  .our-team-home h2,
+  .investment-invite h2,
+  .why-now-home h2 {
+    font-size: 24px;
+  }
+
+  .about-main-left-home p,
+  .about-main-right2-home p,
+  .investment-invite p,
+  .feature-point {
+    font-size: 15px;
+  }
+
+  .about-image-home {
+    width: 100%;
+  }
+
+  .page-title-team,
+  .page-title-investment {
+    padding-top: 60px;
+    padding-bottom: 40px;
+    height: auto;
+    background-attachment: scroll;
+  }
+
+  .video-frame {
+    width: 75vw;
+    height: 220px;
+  }
+
+  .why-now-box-home {
+    width: 100%;
+    padding: 25px 15px;
+  }
+
+  .why-now-text-home {
+    font-size: 16px;
+  }
+
+  .why-now-name-home {
+    font-size: 18px;
+  }
+
+  .why-now-role-home {
+    font-size: 14px;
+  }
+
+  .team-box-home {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .team-img-home img {
+    width: 100%;
+  }
+
+  .team-person-home p {
+    font-size: 16px;
+  }
+
+  .team-person-home span {
+    font-size: 13px;
+  }
+
+  .team-person-social-home a {
+    font-size: 16px;
+  }
+
+  .home-slick-prev-custom {
+    margin-left: 10px;
+    font-size: 24px;
+  }
+
+  .home-slick-next-custom {
+    margin-left: calc(100% - 50px);
+    font-size: 24px;
+  }
+
+  .feature-point {
+    flex-direction: row;
+    justify-content: center;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .feature-point i {
+    font-size: 16px;
+    margin-right: 8px;
+  }
+
+  .why-now-home {
+    padding: 40px 10px;
+  }
+
+  .our-team-home {
+    padding: 40px 10px;
+  }
+
+  .investment-invite {
+    padding: 20px 10px;
+  }
+
+  .investment-invite h2 {
+    font-size: 24px;
+  }
+
+  .investment-invite p {
+    font-size: 16px;
+  }
+}
