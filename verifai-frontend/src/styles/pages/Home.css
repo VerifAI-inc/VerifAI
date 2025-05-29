@@ -181,10 +181,8 @@
 }
 
 .video-frame {
-  position: relative;
-  width: 90%;
-  max-width: 1100px;
-  height: 400px;
+  width: 50vw;                   
+  height: 400px;              
   border-radius: 20px;
   padding: 10px 15px;
   background: linear-gradient(135deg, #6b0000, #1b3b6f);
@@ -195,8 +193,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  overflow: hidden;
+  margin: 0 auto;              
 }
+
 
 .video-frame:hover {
   transform: scale(1.05);

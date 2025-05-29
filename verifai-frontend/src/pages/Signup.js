@@ -64,12 +64,11 @@ const Signup = () => {
     <div className="signup-page">
       {/* Page Header */}
       <section className="signup-header">
-        <div className="signup-container">
-          {/* <h2>VerifAI</h2> */}
+        <div className="signup-second-container">
           <div className="signup-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>SIGN UP</span>
+            <span>Sign Up</span>
           </div>
         </div>
       </section>

@@ -277,7 +277,7 @@ const Results = () => {
           <div className="results-header-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>RESULTS</span>
+            <span>Results</span>
           </div>
         </div>
       </section>

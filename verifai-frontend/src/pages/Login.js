@@ -64,12 +64,11 @@ const Login = () => {
     <div className="login-page">
       {/* Page Header */}
       <section className="login-header">
-        <div className="login-container">
-          {/* <h2>VerifAI</h2> */}
+        <div className="login-second-container">
           <div className="login-breadcrumb">
             <Link to="/">HOME</Link>
             <i className="fas fa-angle-right"></i>
-            <span>LOGIN</span>
+            <span>Login</span>
           </div>
         </div>
       </section>

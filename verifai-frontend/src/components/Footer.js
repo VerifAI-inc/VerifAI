@@ -57,6 +57,9 @@ const Footer = () => {
             <a href="https://www.linkedin.com/company/verif-ai" target="_blank" rel="noopener noreferrer">
               <i className="fab fa-linkedin icon"></i>
             </a>
+              <a href="https://www.youtube.com/@VerifAIInfo" target="_blank" rel="noopener noreferrer">
+              <i className="fab fa-youtube icon"></i>
+            </a>
           </div>
         </div>
 

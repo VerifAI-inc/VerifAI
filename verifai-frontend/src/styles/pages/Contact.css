@@ -6,6 +6,10 @@
   height: 135px;
 }
 
+.contact-page {
+    margin-bottom: -80px;
+}
+
 .contact-container {
   max-width: 1000px;
   margin: 0 auto;

@@ -6,37 +6,30 @@
 }
 
 .login-header {
-    background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
-    padding: 80px 20px;
-    color: white;
-    text-align: center;
-    height: 135px;
+  background: url('/src/assets/backgrounds/abstract-bg-centered-colorful.jpg') no-repeat center center/cover;
+  padding: 80px 20px;
+  color: white;
+  text-align: center;
+  height: 135px;
+}
+
+.login-second-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.login-breadcrumb {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 45px;
+}
+
+.login-breadcrumb i {
+  margin: 0 10px;
 }
 
 .login-container {
     margin-bottom: -80px;
-}
-
-.login-header h2 {
-    font-size: 36px;
-    font-weight: bold;
-    margin-top: 5px;
-    text-transform: uppercase;
-}
-
-.login-breadcrumb {
-    font-size: 16px;
-    margin-top: 15px;
-}
-
-.login-breadcrumb a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.login-breadcrumb i {
-    margin: 0 10px;
 }
 
 .login-form-section {

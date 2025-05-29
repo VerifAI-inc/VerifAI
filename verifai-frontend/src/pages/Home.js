@@ -188,17 +188,13 @@ const Home = () => {
       <section className="investment-video-section">
         <div className="container-home">
           <div className="video-frame">
-            <video 
-              controls 
-              autoPlay 
-              muted 
-              loop 
-              preload="metadata"
+            <iframe
               className="investment-video"
-              >
-              <source src="/videos/investment-promo.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+              src="https://www.youtube.com/embed/yTtGi3oBoWo"
+              title="VerifAI Investment Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
           </div>
         </div>
       </section>
