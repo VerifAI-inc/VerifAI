@@ -9,7 +9,6 @@ export default function Services() {
   const [goal, setGoal] = useState('');
   const [weights, setWeights] = useState({ fairness: 33, privacy: 33, accuracy: 34 });
   const [errors, setErrors] = useState({ model: '', dataset: '' });
-  const [showPopup, setShowPopup] = useState(false);
 
   const handleWeightChange = (key, value) => {
     value = parseInt(value);
@@ -28,11 +27,6 @@ export default function Services() {
     }
 
     setWeights(updated);
-  };
-
-  const handlePreventFileAccess = (e) => {
-    e.preventDefault();
-    setShowPopup(true);
   };
 
   const handleModelUpload = (e) => {
@@ -87,14 +81,14 @@ export default function Services() {
           <div className="form-row">
             <div className="form-group half-width">
               <label htmlFor="model-upload">1. Upload Your Model <span className="file-type">(.pkl file)</span></label>
-              <input id="model-upload" type="file" accept=".pkl" onClick={handlePreventFileAccess} readOnly />
+              <input id="model-upload" type="file" accept=".pkl" onChange={handleModelUpload} />
               {modelFile && <span className="filename">{modelFile.name}</span>}
               {errors.model && <span className="error-message">{errors.model}</span>}
             </div>
 
             <div className="form-group half-width">
               <label htmlFor="dataset-upload">2. Upload Your Dataset <span className="file-type">(.csv file)</span></label>
-              <input id="dataset-upload" type="file" accept=".csv" onClick={handlePreventFileAccess} readOnly />
+              <input id="dataset-upload" type="file" accept=".csv" onChange={handleDatasetUpload} />
               {datasetFile && <span className="filename">{datasetFile.name}</span>}
               {errors.dataset && <span className="error-message">{errors.dataset}</span>}
             </div>
@@ -152,20 +146,6 @@ export default function Services() {
           </div>
         </div>
       </section>
-
-      {showPopup && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button className="modal-close-btn" onClick={() => setShowPopup(false)}>&times;</button>
-            <h3>Servers Currently Unavailable</h3>
-            <p>
-              We're performing system updates. Interested in investing in VerifAI?
-              Visit our homepage to learn more.
-            </p>
-            <button className="modal-home-btn" onClick={() => navigate("/")}>Go to Homepage</button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
