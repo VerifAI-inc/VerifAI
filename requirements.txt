@@ -2,6 +2,7 @@ celery
 redis
 immutabledict
 dotenv
+openai
 
 # Core Python and System Utilities
 absl-py==1.4.0
