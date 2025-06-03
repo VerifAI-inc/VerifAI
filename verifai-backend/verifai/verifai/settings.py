@@ -34,7 +34,7 @@ SECRET_KEY = "django-insecure-(p9rz4j%78u-fyc@06+4vwbm2706pd^%tteh$+-&l&@3sw+5)z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['verifai-backend.onrender.com', 'verifai.tech', 'api.verifai.tech']
+ALLOWED_HOSTS = []
 
 
 # Application definition
