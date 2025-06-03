@@ -169,7 +169,7 @@ def store_results(request):
     return JsonResponse(all_results)
 
 # read api key from txt file located in ../venv/key.txt
-api_key_path = os.path.join(os.path.dirname(__file__), "../myenv/key.txt")
+api_key_path = os.environ.get("API_KEY")
 if os.path.exists(api_key_path):
     with open(api_key_path, "r") as f:
         api_key = f.read().strip()
