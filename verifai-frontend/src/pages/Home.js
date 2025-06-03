@@ -48,7 +48,7 @@ const Home = () => {
       feedback: (
         <>
           From the outset, we have prioritized responsible AI innovation<br />
-          by embedding safety, fairness, robustness, security, and privacy<br />
+          by embedding safety, fairness, robustness, security and privacy<br />
           into our development processes.
         </>
       ),
