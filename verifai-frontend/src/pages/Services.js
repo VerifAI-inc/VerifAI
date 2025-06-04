@@ -51,6 +51,42 @@ export default function Services() {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!modelFile || !datasetFile || !goal) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("modelFile", modelFile);
+    formData.append("datasetFile", datasetFile);
+    formData.append("goal", goal);
+    formData.append("weights", JSON.stringify(weights));
+
+    try {
+      const response = await fetch("http://localhost:8000/api/submit-evaluation/", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        alert("Submission successful! We will contact you soon.");
+        setModelFile(null);
+        setDatasetFile(null);
+        setGoal('');
+        setWeights({ fairness: 33, privacy: 33, accuracy: 34 });
+      } else {
+        const text = await response.text();
+        console.error("Non-JSON response text:", text);
+        alert("Server returned a non-JSON response:\n\n" + text);
+      }
+    } catch (error) {
+      alert("Submission failed: " + error.message);
+    }
+  };
+
   return (
     <div className="services-page">
       <section className="services-header">
@@ -68,7 +104,7 @@ export default function Services() {
           <h2>Submit Model & Dataset for Evaluation</h2>
           <div className="card-description">
             <p>
-              This form allows you to submit your model and  dataset
+              This form allows you to submit your model and dataset
               for evaluation. You will describe your intended use case and distribute
               importance weights across fairness, privacy, and accuracy.
             </p>
@@ -142,7 +178,7 @@ export default function Services() {
           </div>
 
           <div className="form-group">
-            <button className="submit-btn">Submit</button>
+            <button className="submit-btn" onClick={handleSubmit}>Submit</button>
           </div>
         </div>
       </section>

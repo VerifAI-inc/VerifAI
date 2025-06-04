@@ -3,6 +3,7 @@ from rest_framework.generics import ListAPIView
 from .models import ReportHistory
 from .serializers import ReportHistorySerializer
 import os
+from email.mime.text import MIMEText
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,7 +17,9 @@ from django.core.management import call_command
 from .tasks import train_model_task
 from openai import OpenAI
 from rest_framework.decorators import api_view, permission_classes
-
+from django.core.mail import EmailMessage
+from .serializers import EvaluationSubmissionSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class ReportHistoryList(ListAPIView):
     queryset = ReportHistory.objects.all().order_by('-creation_date')
@@ -170,10 +173,13 @@ def store_results(request):
 
 # read api key from txt file located in ../venv/key.txt
 api_key_path = os.path.join(os.path.dirname(__file__), "../myenv/key.txt")
+
 if os.path.exists(api_key_path):
     with open(api_key_path, "r") as f:
         api_key = f.read().strip()
-client = OpenAI(api_key=api_key)
+    client = OpenAI(api_key=api_key)
+else:
+    raise FileNotFoundError(f"API key not found at {api_key_path}. Please create myenv/key.txt with your OpenAI key.")
 
 
 @api_view(["GET", "POST"])
@@ -216,3 +222,42 @@ def generate_report(request):
     except Exception as e:
         print("🛠️ 6. ERROR calling OpenAI:", str(e))
         return Response({"error": str(e)}, status=500)
+    
+class SubmitEvaluationView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = EvaluationSubmissionSerializer(data=request.data)
+        if serializer.is_valid():
+            model_file = serializer.validated_data['modelFile']
+            dataset_file = serializer.validated_data['datasetFile']
+            goal = serializer.validated_data['goal']
+            weights = serializer.validated_data['weights']
+
+            # Re-typed ASCII-only strings here:
+            body = (
+                f"Goal:\n{goal}\n\n"
+                f"Weights:\n"
+                f"  - Fairness: {weights.get('fairness', 0)}%\n"
+                f"  - Privacy: {weights.get('privacy', 0)}%\n"
+                f"  - Accuracy: {weights.get('accuracy', 0)}%\n"
+            )
+
+            email = EmailMessage(
+                subject="New Evaluation Request Submitted",
+                body=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=["info.verifai@gmail.com"],
+            )
+            # Force UTF-8 (so it will encode any non-ASCII safely)
+            email.encoding = 'utf-8'
+
+            # Attach files (model + dataset)
+            email.attach(model_file.name, model_file.read(), model_file.content_type)
+            email.attach(dataset_file.name, dataset_file.read(), dataset_file.content_type)
+
+            email.send()
+            return Response({"message": "Form submitted and emailed successfully."}, status=200)
+
+        return Response(serializer.errors, status=400)

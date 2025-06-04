@@ -176,7 +176,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'info.verifai@gmail.com'
-EMAIL_HOST_PASSWORD = 'pggd riei xgmi rlfv'
+EMAIL_HOST_PASSWORD = 'sjhjcqyxvalzfmod'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 

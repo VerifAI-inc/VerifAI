@@ -104,3 +104,29 @@ class UploadSerializer(serializers.Serializer):
         )
 
         return session
+
+class EvaluationSubmissionSerializer(serializers.Serializer):
+    modelFile = serializers.FileField(required=True)
+    datasetFile = serializers.FileField(required=True)
+    goal = serializers.CharField(required=True)
+    weights = serializers.CharField(required=True)  # JSON string from frontend
+
+    def validate_modelFile(self, value):
+        if not value.name.endswith('.pkl'):
+            raise serializers.ValidationError("Only .pkl files are accepted.")
+        return value
+
+    def validate_datasetFile(self, value):
+        if not value.name.endswith('.csv'):
+            raise serializers.ValidationError("Only .csv files are accepted.")
+        return value
+
+    def validate_weights(self, value):
+        import json
+        try:
+            parsed = json.loads(value)
+        except json.JSONDecodeError:
+            raise serializers.ValidationError("Weights must be a valid JSON string.")
+        if not isinstance(parsed, dict):
+            raise serializers.ValidationError("Weights must be a dictionary.")
+        return parsed  # Return parsed dict for use in the view
