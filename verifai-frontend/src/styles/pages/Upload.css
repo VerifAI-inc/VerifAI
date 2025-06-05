@@ -174,7 +174,7 @@ label,
   accent-color: #4b6cb7;
 }
 
-.submit-btn {
+.submit-btn-upload {
   background-color: #4b6cb7;
   color: white;
   padding: 14px 0;
@@ -188,7 +188,7 @@ label,
   text-align: center;
 }
 
-.submit-btn:hover {
+.submit-btn-upload:hover {
   background-color: #3a539b;
 }
 
@@ -285,6 +285,10 @@ label,
 @media (max-width: 768px) {
   .form-row {
     flex-direction: column;
+  }
+
+  .submit-btn-upload {
+    margin-left: 37px;
   }
 
   .upload-form {

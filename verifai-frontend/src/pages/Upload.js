@@ -172,8 +172,8 @@ const Upload = () => {
           </div>
 
           <div className="form-row" style={{ justifyContent: "center", gap: "20px" }}>
-            <button className="submit-btn" style={{ maxWidth: "260px" }} onClick={handleSubmit}>Start Training</button>
-            <button className="submit-btn" style={{ maxWidth: "260px" }} onClick={() => navigate("/results")}>See Results</button>
+            <button className="submit-btn-upload" style={{ maxWidth: "260px" }} onClick={handleSubmit}>Start Training</button>
+            <button className="submit-btn-upload" style={{ maxWidth: "260px" }} onClick={() => navigate("/results")}>See Results</button>
           </div>
 
           {uploadResult && (

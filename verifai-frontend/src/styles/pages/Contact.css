@@ -153,11 +153,51 @@
 
 @media (max-width: 768px) {
     .contact-form-container {
-        width: 95%;
+        width: 86%;
     }
 
     .contact-map iframe {
-        width: 100%;
+        width: 90%;
         height: 300px;
+    }
+
+    .contact-title {
+        font-size: 2rem;
+    }
+
+    .contact-button {
+        font-size: 1rem;
+    }
+
+    .contact-form-group input, .contact-form-group textarea {
+        font-size: 0.9rem;
+        width: 345px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-header {
+        padding: 60px 15px;
+        height: 100px;
+    }
+
+    .contact-title {
+        font-size: 1.5rem;
+    }
+
+    .contact-form-container {
+        padding: 20px;
+    }
+
+    .contact-form-group input, .contact-form-group textarea {
+        font-size: 0.85rem;
+    }
+
+    .contact-button {
+        font-size: 0.95rem;
+    }
+
+    .contact-map iframe {
+        height: 250px;
     }
 }
