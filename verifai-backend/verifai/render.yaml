@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: verifai-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn verifai.wsgi:application
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: verifai.tech,www.verifai.tech,your-app-name.onrender.com
+      - key: EMAIL_HOST_USER
+        value: info.verifai@gmail.com
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+
+databases:
+  - name: verifai-db
+    databaseName: verifai
+    user: verifai 

@@ -235,8 +235,19 @@ class SubmitEvaluationView(APIView):
             goal = serializer.validated_data['goal']
             weights = serializer.validated_data['weights']
 
+            # Get user information if available (from JWT token)
+            user_info = ""
+            if hasattr(request, 'user') and request.user.is_authenticated:
+                user_info = (
+                    f"User Information:\n"
+                    f"  - Name: {request.user.first_name} {request.user.last_name}\n"
+                    f"  - Username: {request.user.username}\n"
+                    f"  - Email: {request.user.email}\n\n"
+                )
+
             # Re-typed ASCII-only strings here:
             body = (
+                f"{user_info}"
                 f"Goal:\n{goal}\n\n"
                 f"Weights:\n"
                 f"  - Fairness: {weights.get('fairness', 0)}%\n"

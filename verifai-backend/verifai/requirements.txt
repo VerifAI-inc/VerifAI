@@ -2,6 +2,9 @@ celery
 redis
 immutabledict
 dotenv
+dj-database-url
+gunicorn
+whitenoise
 
 # Core Python and System Utilities
 absl-py==1.4.0
