@@ -2,20 +2,28 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+permissions:
+  pages: write
+  id-token: write
+  contents: read
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
       - run: npm install
+        working-directory: verifai-frontend
       - run: npm run build
+        working-directory: verifai-frontend
+      - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: build
-      - uses: actions/deploy-pages@v4
-    permissions:
-      pages: write
-      id-token: write
+          path: verifai-frontend/build
+      - id: deployment
+        uses: actions/deploy-pages@v4
